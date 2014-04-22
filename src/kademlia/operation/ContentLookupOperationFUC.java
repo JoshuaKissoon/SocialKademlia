@@ -13,23 +13,25 @@ import java.util.TreeMap;
 import kademlia.dht.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
+import kademlia.dht.GetParameterFUC;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
-import kademlia.message.ContentLookupMessage;
+import kademlia.message.ContentLookupMessageFUC;
 import kademlia.message.ContentMessage;
 import kademlia.message.Message;
 import kademlia.message.NodeReplyMessage;
+import kademlia.message.UpToDateContentMessage;
 import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 
 /**
- * Looks up a specified identifier and returns the value associated with it
+ * Looks up a specified Content and returns it
  *
  * @author Joshua Kissoon
- * @since 20140226
+ * @since 20140422
  */
-public class ContentLookupOperation implements Operation, Receiver
+public class ContentLookupOperationFUC implements Operation, Receiver
 {
 
     /* Constants */
@@ -42,12 +44,13 @@ public class ContentLookupOperation implements Operation, Receiver
     private final Node localNode;
     private final GetParameter params;
     private final List<StorageEntry> contentFound;
-    private final int numNodesToQuery;
+    private int numNodesToQuery;
     private final KadConfiguration config;
 
-    private final ContentLookupMessage lookupMessage;
+    private final Message lookupMessage;
 
     private boolean contentsFound;
+    private boolean newerContentExist = false; // Whether the content we have is up to date
     private final SortedMap<Node, Byte> nodes;
 
     /* Tracks messages in transit and awaiting reply */
@@ -70,10 +73,10 @@ public class ContentLookupOperation implements Operation, Receiver
      * @param numNodesToQuery The number of nodes to query to get this content. We return the content among these nodes.
      * @param config
      */
-    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numNodesToQuery, KadConfiguration config)
+    public ContentLookupOperationFUC(KadServer server, Node localNode, GetParameterFUC params, int numNodesToQuery, KadConfiguration config)
     {
         /* Construct our lookup message */
-        this.lookupMessage = new ContentLookupMessage(localNode, params);
+        this.lookupMessage = new ContentLookupMessageFUC(localNode, params);
 
         this.server = server;
         this.localNode = localNode;
@@ -255,6 +258,17 @@ public class ContentLookupOperation implements Operation, Receiver
                 /* We've got all the content required, let's stop the loopup operation */
                 this.contentsFound = true;
             }
+
+            /* We've received a newer content than our own, lets specify that newer content exist */
+            this.newerContentExist = true;
+        }
+        else if (incoming instanceof UpToDateContentMessage)
+        {
+            /**
+             * The content we have is up to date
+             * No sense in adding our own content to the resultset, so lets just decrement the number of nodes left to query
+             */
+            numNodesToQuery--;
         }
         else
         {
@@ -309,5 +323,13 @@ public class ContentLookupOperation implements Operation, Receiver
     public List<StorageEntry> getContentFound()
     {
         return this.contentFound;
+    }
+
+    /**
+     * @return Boolean whether newer content exist or not
+     */
+    public boolean newerContentExist()
+    {
+        return this.newerContentExist;
     }
 }
