@@ -36,15 +36,13 @@ public class ContentLookupReceiverFUC implements Receiver
         ContentLookupMessageFUC msg = (ContentLookupMessageFUC) incoming;
         this.localNode.getRoutingTable().insert(msg.getOrigin());
 
-        System.out.println("Received request for updated content with GetParameter" + msg.getParameters());
-        System.out.println("Have Content? " + this.dht.contains(msg.getParameters()));
-
         /* Check if we can have this data */
         if (this.dht.contains(msg.getParameters()))
         {
             /* Return a ContentMessage with the required data if it's a newer version */
             StorageEntry se = this.dht.get(msg.getParameters());
             Message cMsg;
+
             if (se.getContentMetadata().getLastUpdatedTimestamp() > msg.getParameters().getLastUpdatedTimestamp())
             {
                 cMsg = new ContentMessage(localNode, se);
@@ -62,7 +60,6 @@ public class ContentLookupReceiverFUC implements Receiver
              * Return a the K closest nodes to this content identifier
              * We create a NodeLookupReceiver and let this receiver handle this operation
              */
-            System.out.println("We do not have this content");
             NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
             new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
         }

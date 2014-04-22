@@ -97,7 +97,9 @@ public class DHT
                 try
                 {
                     System.out.println("Removing older content to update it");
+                    //System.out.println(this.entriesManager);
                     this.remove(content.getContentMetadata());
+                    //System.out.println(this.entriesManager);
                 }
                 catch (ContentNotFoundException ex)
                 {
@@ -115,6 +117,8 @@ public class DHT
             System.out.println("Adding new content.");
             /* Keep track of this content in the entries manager */
             StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
+
+            //System.out.println(this.entriesManager);
 
             /* Now we store the content locally in a file */
             String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());

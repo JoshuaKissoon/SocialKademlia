@@ -119,6 +119,9 @@ public class StorageEntryMetadata
         sb.append("{Type: ");
         sb.append(this.type);
         sb.append("} ");
+        sb.append("{UpdatedTs: ");
+        sb.append(this.updatedTs);
+        sb.append("} ");
         sb.append("]");
 
         return sb.toString();

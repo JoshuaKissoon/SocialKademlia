@@ -72,6 +72,8 @@ public class MessageFactory
                 return new SimpleReceiver();
             case StoreContentMessage.CODE:
                 return new StoreContentReceiver(server, this.localNode, this.dht);
+            case ContentLookupMessageFUC.CODE:
+                return new ContentLookupReceiverFUC(server, this.localNode, this.dht, this.config);
             default:
                 System.out.println("No reveiver found for message. Code: " + code);
                 return new SimpleReceiver();

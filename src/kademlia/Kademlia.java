@@ -18,14 +18,17 @@ import kademlia.dht.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
+import kademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
+import kademlia.exceptions.UpToDateContentException;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 import kademlia.operation.ConnectOperation;
 import kademlia.operation.ContentLookupOperation;
+import kademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
@@ -301,6 +304,32 @@ public class Kademlia
         contentFound = clo.getContentFound();
 
         return contentFound;
+    }
+
+    /**
+     * Get some content stored on the DHT if there is a newer version than our current version.
+     *
+     * @param param           The parameters used to search for the content
+     * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
+     *
+     * @return DHTContent The content
+     *
+     * @throws java.io.IOException
+     * @throws kademlia.exceptions.UpToDateContentException
+     */
+    public List<StorageEntry> getUpdated(GetParameterFUC param, int numNodesToQuery) throws NoSuchElementException, IOException, UpToDateContentException
+    {
+        /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, param, numNodesToQuery, this.config);
+        clo.execute();
+        if (clo.newerContentExist())
+        {
+            return clo.getContentFound();
+        }
+        else
+        {
+            throw new UpToDateContentException("The content is up to date");
+        }
     }
 
     /**
