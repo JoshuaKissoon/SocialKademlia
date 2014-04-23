@@ -25,7 +25,7 @@ import kademlia.util.serializer.KadSerializer;
 public class DHT
 {
 
-    private transient StorageEntryManager entriesManager;
+    private transient StoredContentManager contentManager;
     private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
 
@@ -43,7 +43,7 @@ public class DHT
      */
     public final void initialize()
     {
-        entriesManager = new StorageEntryManager();
+        contentManager = new StoredContentManager();
     }
 
     /**
@@ -82,52 +82,51 @@ public class DHT
      */
     public boolean store(StorageEntry content) throws IOException
     {
+        boolean cached = content.getContentMetadata().isCached();   // Should we cache this content
+
         /* Lets check if we have this content and it's the updated version */
-        if (this.entriesManager.contains(content.getContentMetadata()))
+        if (this.contentManager.contains(content.getContentMetadata()))
         {
-            StorageEntryMetadata current = this.entriesManager.get(content.getContentMetadata());
+            StorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
+
             if (current.getLastUpdatedTimestamp() >= content.getContentMetadata().getLastUpdatedTimestamp())
             {
-                /* We have the current content, no need to update it! just leave this method now */
+                /* We have the current content, no need to update it! */
+                if (content.getContentMetadata().isCached() && !current.isCached())
+                {
+                    /* If they require us to cache this content, lets cache it */
+                    current.setCached();
+                }
                 return false;
             }
-            else
+
+            if (current.isCached())
             {
-                /* We have this content, but not the latest version, lets delete it so the new version will be added below */
-                try
-                {
-                    System.out.println("Removing older content to update it");
-                    //System.out.println(this.entriesManager);
-                    this.remove(content.getContentMetadata());
-                    //System.out.println(this.entriesManager);
-                }
-                catch (ContentNotFoundException ex)
-                {
-                    /* @todo Log an error here */
-                }
+                /* If the current version is a chached version, remember to cache it back if we need to do an update */
+                cached = true;
             }
+
+            /* We have this content, but not the latest version, lets delete it so the new version will be added below */
+            try
+            {
+                System.out.println("Removing older content to update it");
+                this.remove(content.getContentMetadata());
+            }
+            catch (ContentNotFoundException ex)
+            {
+                /* @todo Log an error here */
+            }
+
         }
 
-        /**
-         * If we got here means we don't have this content, or we need to update the content
-         * If we need to update the content, the code above would've already deleted it, so we just need to re-add it
-         */
+        /* We got here means we need to add the content or re-add it to update it */
         try
         {
-            System.out.println("Adding new content.");
-            /* Keep track of this content in the entries manager */
-            StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
-
-            //System.out.println(this.entriesManager);
-
-            /* Now we store the content locally in a file */
-            String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
-
-            try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct");
-                    DataOutputStream dout = new DataOutputStream(fout))
-            {
-                this.getSerializer().write(content, dout);
-            }
+            /* Store the content to a file and then keep track of this content in the entries manager */
+            StorageEntryMetadata entryMD = content.getContentMetadata();
+            entryMD.setCached(cached);
+            this.contentManager.put(entryMD);
+            this.putContentToFile(content, entryMD);
             return true;
         }
         catch (ContentExistException e)
@@ -135,12 +134,60 @@ public class DHT
             /* @todo Content already exist on the DHT, log an error here */
             return false;
         }
-
     }
 
     public boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
+    }
+
+    /**
+     * Handle storing content locally to keep the content cached.
+     *
+     * @param content The DHT content to store
+     *
+     * @return boolean true if we stored the content, false if the content already exists and is up to date
+     *
+     * @throws java.io.IOException
+     */
+    public boolean cache(StorageEntry content) throws IOException
+    {
+        content.getContentMetadata().setCached();
+        return this.store(content);
+    }
+
+    public boolean cache(KadContent content) throws IOException
+    {
+        return this.cache(new StorageEntry(content));
+    }
+
+    /**
+     * Write the given storage entry to it's file
+     */
+    private void putContentToFile(StorageEntry content, StorageEntryMetadata entryMD) throws IOException
+    {
+        String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
+
+        try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + entryMD.hashCode() + ".kct");
+                DataOutputStream dout = new DataOutputStream(fout))
+        {
+            this.getSerializer().write(content, dout);
+        }
+    }
+
+    /**
+     * Update a content; the operation is only done iff we already have a copy of the content here
+     */
+    public void update(StorageEntry newContent)
+    {
+        if (this.contentManager.contains(newContent.getContentMetadata()))
+        {
+            this.store(newContent);
+        }
+        else
+        {
+            throw new NoSuchElementException("This content is not on the DHT currently, cannot update it.");
+        }
     }
 
     /**
@@ -167,7 +214,7 @@ public class DHT
      */
     public boolean contains(GetParameter param)
     {
-        return this.entriesManager.contains(param);
+        return this.contentManager.contains(param);
     }
 
     /**
@@ -213,7 +260,7 @@ public class DHT
         /* Load a KadContent if any exist for the given criteria */
         try
         {
-            StorageEntryMetadata e = this.entriesManager.get(param);
+            StorageEntryMetadata e = this.contentManager.get(param);
             return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
@@ -247,7 +294,7 @@ public class DHT
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
 
-        entriesManager.remove(entry);
+        contentManager.remove(entry);
 
         if (file.exists())
         {
@@ -290,7 +337,15 @@ public class DHT
      */
     public List<StorageEntryMetadata> getStorageEntries()
     {
-        return entriesManager.getAllEntries();
+        return contentManager.getAllEntries();
+    }
+
+    /**
+     * @return A List of all StorageEntries of cached content for this node
+     */
+    public List<StorageEntryMetadata> getCachedStorageEntries()
+    {
+        return contentManager.getAllCachedEntries();
     }
 
     /**
@@ -305,7 +360,7 @@ public class DHT
         {
             try
             {
-                this.entriesManager.put(e);
+                this.contentManager.put(e);
             }
             catch (ContentExistException ex)
             {
@@ -317,6 +372,6 @@ public class DHT
     @Override
     public String toString()
     {
-        return this.entriesManager.toString();
+        return this.contentManager.toString();
     }
 }

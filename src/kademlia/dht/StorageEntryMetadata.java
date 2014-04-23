@@ -19,6 +19,8 @@ public class StorageEntryMetadata
     private final int contentHash;
     private final long updatedTs;
 
+    private boolean isCached = false;
+
     public StorageEntryMetadata(KadContent content)
     {
         this.key = content.getKey();
@@ -51,6 +53,29 @@ public class StorageEntryMetadata
     public long getLastUpdatedTimestamp()
     {
         return this.updatedTs;
+    }
+
+    /**
+     * Specify that this content should be cached.
+     */
+    public void setCached()
+    {
+        this.isCached = true;
+    }
+
+    /**
+     * Specify that this content should be cached.
+     *
+     * @param cached
+     */
+    public void setCached(boolean cached)
+    {
+        this.isCached = cached;
+    }
+
+    public boolean isCached()
+    {
+        return this.isCached;
     }
 
     /**
@@ -121,6 +146,9 @@ public class StorageEntryMetadata
         sb.append("} ");
         sb.append("{UpdatedTs: ");
         sb.append(this.updatedTs);
+        sb.append("} ");
+        sb.append("{cached?: ");
+        sb.append(this.isCached());
         sb.append("} ");
         sb.append("]");
 

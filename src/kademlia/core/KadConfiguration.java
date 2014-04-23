@@ -48,7 +48,7 @@ public interface KadConfiguration
     public int stale();
 
     /**
-     * Creates the folder in which this node data is to be stored
+     * Creates the folder in which this node data is to be stored.
      *
      * @param ownerId
      *

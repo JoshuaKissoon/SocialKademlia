@@ -262,7 +262,8 @@ public class Kademlia
     }
 
     /**
-     * Store a content on the local node's DHT
+     * Store a content on the local node's DHT;
+     * This content will be deleted if this node is not one of the K-closest to the content.
      *
      * @param content The content to put on the DHT
      *
@@ -274,8 +275,35 @@ public class Kademlia
     }
 
     /**
+     * Stores the specified value under the given key locally;
+     * This content is permanently stored locally and will not be deleted unless the cache is cleared.
+     *
+     * @param content The content to put onto the local DHT
+     *
+     * @throws java.io.IOException
+     *
+     */
+    public synchronized void cache(KadContent content) throws IOException
+    {
+        this.dht.cache(content);
+    }
+
+    /**
+     * Get some content cached locally on the DHT.
+     *
+     * @param param The parameters used to search for the content
+     *
+     * @return DHTContent The content
+     *
+     * @throws java.io.IOException
+     */
+    public StorageEntry getCachedContent(GetParameter param) throws NoSuchElementException, IOException
+    {
+        return this.dht.get(param);
+    }
+
+    /**
      * Get some content stored on the DHT
-     * The content returned is a JSON String in byte format; this string is parsed into a class
      *
      * @param param           The parameters used to search for the content
      * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
@@ -312,19 +340,43 @@ public class Kademlia
      * @param param           The parameters used to search for the content
      * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
      *
-     * @return DHTContent The content
+     * @return StorageEntry The content
      *
      * @throws java.io.IOException
      * @throws kademlia.exceptions.UpToDateContentException
      */
-    public List<StorageEntry> getUpdated(GetParameterFUC param, int numNodesToQuery) throws NoSuchElementException, IOException, UpToDateContentException
+    public StorageEntry getUpdated(GetParameterFUC param, int numNodesToQuery) throws NoSuchElementException, IOException, UpToDateContentException
     {
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, param, numNodesToQuery, this.config);
         clo.execute();
         if (clo.newerContentExist())
         {
-            return clo.getContentFound();
+            StorageEntry latest = null;
+            for (StorageEntry e : clo.getContentFound())
+            {
+                if (latest == null)
+                {
+                    latest = e;
+                }
+
+                if (e.getContentMetadata().getLastUpdatedTimestamp() > latest.getContentMetadata().getLastUpdatedTimestamp())
+                {
+                    latest = e;
+                }
+            }
+
+            try
+            {
+                /* If we have this content locally, lets update it too */
+                this.dht.update(latest);
+            }
+            catch (NoSuchElementException ex)
+            {
+                /* Any exception here will be if we don't have the content... just ignore it */
+            }
+
+            return latest;
         }
         else
         {

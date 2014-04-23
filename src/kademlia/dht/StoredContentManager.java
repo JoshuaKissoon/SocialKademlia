@@ -17,7 +17,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140226
  */
-class StorageEntryManager
+class StoredContentManager
 {
 
     private final Map<NodeId, List<StorageEntryMetadata>> entries;
@@ -157,6 +157,30 @@ class StorageEntryManager
             if (entrySet.size() > 0)
             {
                 entriesRet.addAll(entrySet);
+            }
+        }
+
+        return entriesRet;
+    }
+
+    /**
+     * @return A list of all storage entries for cached content
+     */
+    public List<StorageEntryMetadata> getAllCachedEntries()
+    {
+        List<StorageEntryMetadata> entriesRet = new ArrayList<>();
+
+        for (List<StorageEntryMetadata> entrySet : this.entries.values())
+        {
+            if (entrySet.size() > 0)
+            {
+                for (StorageEntryMetadata md : entriesRet)
+                {
+                    if (md.isCached())
+                    {
+                        entriesRet.add(md);
+                    }
+                }
             }
         }
 
