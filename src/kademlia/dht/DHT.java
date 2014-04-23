@@ -291,6 +291,12 @@ public class DHT
 
     public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
+        /* If it's cached data, we don't remove it */
+        if(this.contentManager.get(entry).isCached())
+        {
+            return;
+        }
+        
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
 
