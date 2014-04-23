@@ -1,7 +1,6 @@
 package kademlia.tests;
 
 import java.io.IOException;
-import java.util.List;
 import kademlia.Kademlia;
 import kademlia.dht.GetParameterFUC;
 import kademlia.dht.StorageEntry;
@@ -53,12 +52,9 @@ public class GetUpdatedContentTest
                 /* Lets see if there is an updated version of the content */
                 System.out.println("\n\nRetrieving Content C1");
                 GetParameterFUC gp = new GetParameterFUC(c1.getKey(), DHTContentImpl.TYPE, c1.getOwnerId(), c1.getLastUpdatedTimestamp());
-                List<StorageEntry> conte = kad2.getUpdated(gp, 4);
-                for (StorageEntry cc : conte)
-                {
-                    System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent().getBytes()));
-                    System.out.println("Content Metadata: " + cc.getContentMetadata());
-                }
+                StorageEntry conte = kad2.getUpdated(gp, 4);
+                System.out.println("Updated Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
+                System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
             }
             catch (IOException | UpToDateContentException ex)
             {
@@ -70,15 +66,13 @@ public class GetUpdatedContentTest
             {
                 /* Lets retrieve the content c2 if it's updated */
                 System.out.println("\n\n\n****************Retrieving Content c2 Again");
-                
+
                 /* We use c2 old TS, since that's the TS of the version kad2 has */
                 GetParameterFUC gp = new GetParameterFUC(c2.getKey(), DHTContentImpl.TYPE, c2.getOwnerId(), c2OldTs);
-                List<StorageEntry> conte = kad2.getUpdated(gp, 4);
-                for (StorageEntry cc : conte)
-                {
-                    System.out.println("Updated Content Found: " + new DHTContentImpl().fromBytes(cc.getContent().getBytes()));
-                    System.out.println("Updated Content Metadata: " + cc.getContentMetadata());
-                }
+                StorageEntry conte = kad2.getUpdated(gp, 4);
+                System.out.println("Updated Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
+                System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
+
             }
             catch (IOException | UpToDateContentException ex)
             {

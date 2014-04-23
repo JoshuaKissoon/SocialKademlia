@@ -178,7 +178,7 @@ public class DHT
     /**
      * Update a content; the operation is only done iff we already have a copy of the content here
      */
-    public void update(StorageEntry newContent)
+    public void update(StorageEntry newContent) throws IOException
     {
         if (this.contentManager.contains(newContent.getContentMetadata()))
         {
