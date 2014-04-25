@@ -5,8 +5,11 @@ import java.util.List;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
+import kademlia.dht.GetParameterFUC;
+import kademlia.dht.StorageEntry;
 import kademlia.dht.StorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
+import kademlia.exceptions.UpToDateContentException;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
@@ -84,6 +87,23 @@ public class ContentRefreshOperation implements Operation
             {
                 /* It would be weird if the content is not found here */
                 System.err.println("ContentRefreshOperation: Removing content from local node, content not found... Message: " + cnfe.getMessage());
+            }
+
+            /* If this is a cached content, lets check for an updated version and update local storage */
+            if (e.isCached())
+            {
+                ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, new GetParameterFUC(e), this.config.k(), this.config);
+                clo.execute();
+                
+                try
+                {
+                    StorageEntry latest = clo.getLatestContentFound();
+                    this.dht.update(latest);
+                }
+                catch (UpToDateContentException ex)
+                {
+                    /* Content is already up to date, don't do anything */
+                }
             }
         }
 

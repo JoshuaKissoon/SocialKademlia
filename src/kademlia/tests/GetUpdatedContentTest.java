@@ -11,7 +11,7 @@ import kademlia.node.NodeId;
  * We put the content on the network, and then check for an up to date version.
  *
  * @author Joshua Kissoon
- * @since 20140224
+ * @since 20140422
  */
 public class GetUpdatedContentTest
 {

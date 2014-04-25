@@ -17,6 +17,7 @@ import kademlia.dht.GetParameterFUC;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
+import kademlia.exceptions.UpToDateContentException;
 import kademlia.message.ContentLookupMessageFUC;
 import kademlia.message.ContentMessage;
 import kademlia.message.Message;
@@ -323,6 +324,40 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     public List<StorageEntry> getContentFound()
     {
         return this.contentFound;
+    }
+
+    /**
+     * Check the content found and get the most up to date version
+     *
+     * @return The latest version of the content from all found
+     *
+     * @throws kademlia.exceptions.UpToDateContentException
+     */
+    public StorageEntry getLatestContentFound() throws UpToDateContentException
+    {
+        /* We don't have any newer content */
+        if (this.contentFound.isEmpty())
+        {
+            throw new UpToDateContentException("The content is up to date");
+        }
+
+        /* We have some newer content, lets get it */
+        StorageEntry latest = null;
+
+        for (StorageEntry e : this.contentFound)
+        {
+            if (latest == null)
+            {
+                latest = e;
+            }
+
+            if (e.getContentMetadata().getLastUpdatedTimestamp() > latest.getContentMetadata().getLastUpdatedTimestamp())
+            {
+                latest = e;
+            }
+        }
+
+        return latest;
     }
 
     /**

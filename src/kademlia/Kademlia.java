@@ -350,38 +350,20 @@ public class Kademlia
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, param, numNodesToQuery, this.config);
         clo.execute();
-        if (clo.newerContentExist())
+
+        StorageEntry latest = clo.getLatestContentFound();
+
+        /* If we have this content locally, lets update it too */
+        try
         {
-            StorageEntry latest = null;
-            for (StorageEntry e : clo.getContentFound())
-            {
-                if (latest == null)
-                {
-                    latest = e;
-                }
-
-                if (e.getContentMetadata().getLastUpdatedTimestamp() > latest.getContentMetadata().getLastUpdatedTimestamp())
-                {
-                    latest = e;
-                }
-            }
-
-            try
-            {
-                /* If we have this content locally, lets update it too */
-                this.dht.update(latest);
-            }
-            catch (NoSuchElementException ex)
-            {
-                /* Any exception here will be if we don't have the content... just ignore it */
-            }
-
-            return latest;
+            this.dht.update(latest);
         }
-        else
+        catch (NoSuchElementException ex)
         {
-            throw new UpToDateContentException("The content is up to date");
+            /* Any exception here will be if we don't have the content... just ignore it */
         }
+
+        return latest;
     }
 
     /**
