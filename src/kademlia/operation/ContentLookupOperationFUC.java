@@ -251,7 +251,6 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             StorageEntry content = msg.getContent();
             System.out.println("Content Received: " + content);
 
-            /*@todo Check if the content matches the given criteria */
             this.contentFound.add(content);
 
             if (this.contentFound.size() == this.numNodesToQuery)
