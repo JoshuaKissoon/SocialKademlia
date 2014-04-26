@@ -89,6 +89,9 @@ public class DHT
         {
             StorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
 
+            /* update the last republished time */
+            current.updateLastRepublished();
+
             if (current.getLastUpdatedTimestamp() >= content.getContentMetadata().getLastUpdatedTimestamp())
             {
                 /* We have the current content, no need to update it! */
