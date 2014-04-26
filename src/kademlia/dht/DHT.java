@@ -114,7 +114,7 @@ public class DHT
             }
             catch (ContentNotFoundException ex)
             {
-                /* @todo Log an error here */
+                /* This won't ever happen at this point since we only get here if the content is found, lets ignore it  */
             }
 
         }
@@ -131,7 +131,11 @@ public class DHT
         }
         catch (ContentExistException e)
         {
-            /* @todo Content already exist on the DHT, log an error here */
+            /**
+             * Content already exist on the DHT
+             * This won't happen because above takes care of removing the content if it's older and needs to be updated,
+             * or returning if we already have the current content version.
+             */
             return false;
         }
     }
@@ -292,11 +296,11 @@ public class DHT
     public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         /* If it's cached data, we don't remove it */
-        if(this.contentManager.get(entry).isCached())
+        if (this.contentManager.get(entry).isCached())
         {
             return;
         }
-        
+
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
 
