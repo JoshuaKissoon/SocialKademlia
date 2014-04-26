@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +19,7 @@ import kademlia.dht.DHT;
 import kademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UpToDateContentException;
 import kademlia.message.MessageFactory;
@@ -303,27 +302,27 @@ public class Kademlia
      * @return DHTContent The content
      *
      * @throws java.io.IOException
+     * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public List<StorageEntry> get(GetParameter param, int numNodesToQuery) throws NoSuchElementException, IOException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
-        List contentFound = new ArrayList<>();;
         if (this.dht.contains(param))
         {
-            /* If the content exist in our own DHT, then return it. */
-            contentFound.add(this.dht.get(param));
-        }
-
-        if (contentFound.size() == numNodesToQuery)
-        {
-            return contentFound;
+            /**
+             * If the content exist in our own DHT, then return it if it's not a cached entry.
+             * If e is cached means this node is not one of the k-closest, so there may be a more updated version.
+             */
+            StorageEntry e = this.dht.get(param);
+            if (!e.getContentMetadata().isCached())
+            {
+                return e;
+            }
         }
 
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-        ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numNodesToQuery, this.config);
+        ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, this.config);
         clo.execute();
-        contentFound = clo.getContentFound();
-
-        return contentFound;
+        return clo.getContentFound();
     }
 
     /**
