@@ -1,11 +1,11 @@
 package kademlia.message;
 
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.StorageEntry;
-import kademlia.node.Node;
 
 /**
  * Responds to a ContentLookupMessage for updated content by sending a ContentLookupMessageFUC containing the requested content information;
@@ -18,11 +18,11 @@ public class ContentLookupReceiverFUC implements Receiver
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public ContentLookupReceiverFUC(KadServer server, Node localNode, DHT dht, KadConfiguration config)
+    public ContentLookupReceiverFUC(KadServer server, KademliaNode localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
@@ -45,12 +45,12 @@ public class ContentLookupReceiverFUC implements Receiver
 
             if (se.getContentMetadata().getLastUpdatedTimestamp() > msg.getParameters().getLastUpdatedTimestamp())
             {
-                cMsg = new ContentMessage(localNode, se);
+                cMsg = new ContentMessage(localNode.getNode(), se);
             }
             else
             {
                 /* We don't have a newer version, send an UpToDateContentMsg */
-                cMsg = new UpToDateContentMessage(this.localNode);
+                cMsg = new UpToDateContentMessage(this.localNode.getNode());
             }
             server.reply(msg.getOrigin(), cMsg, comm);
         }

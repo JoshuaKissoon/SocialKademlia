@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
@@ -37,7 +38,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private static final String FAILED = "Failed";
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final NodeId lookupId;
     private final KadConfiguration config;
 
@@ -63,14 +64,14 @@ public class NodeLookupOperation implements Operation, Receiver
      * @param lookupId  The ID for which to find nodes close to
      * @param config
      */
-    public NodeLookupOperation(KadServer server, Node localNode, NodeId lookupId, KadConfiguration config)
+    public NodeLookupOperation(KadServer server, KademliaNode localNode, NodeId lookupId, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
         this.lookupId = lookupId;
         this.config = config;
 
-        this.lookupMessage = new NodeLookupMessage(localNode, lookupId);
+        this.lookupMessage = new NodeLookupMessage(localNode.getNode(), lookupId);
 
         /**
          * We initialize a TreeMap to store nodes.
@@ -93,9 +94,9 @@ public class NodeLookupOperation implements Operation, Receiver
             error = true;
 
             /* Set the local node as already asked */
-            nodes.put(this.localNode, ASKED);
+            nodes.put(this.localNode.getNode(), ASKED);
 
-            this.addNodes(this.localNode.getRoutingTable().getAllNodes());
+            this.addNodes(this.localNode.getRoutingTable().findClosest(this.lookupId, this.config.k()));
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
@@ -118,21 +119,9 @@ public class NodeLookupOperation implements Operation, Receiver
                 throw new RoutingException("Lookup Timeout.");
             }
 
-            /**
-             * @deprecated - replaced by the above code
-             * We just keep this code in case any problems are encountered later
-             */
-//            if (!this.askNodesorFinish())
-//            {
-//                /* If we haven't finished as yet, wait for a maximum of OPERATION_TIMEOUT time */
-//                wait(this.config.operationTimeout());
-//
-//                /* If we still haven't received any responses by then, do a routing timeout */
-//                if (error)
-//                {
-//                    throw new RoutingException("Lookup Timeout.");
-//                }
-//            }
+            /* Now after we've finished, we would have an idea of offline nodes, lets update our routing table */
+            this.localNode.getRoutingTable().setUnresponsiveContacts(this.getFailedNodes());
+
         }
         catch (InterruptedException e)
         {
@@ -320,5 +309,20 @@ public class NodeLookupOperation implements Operation, Receiver
         this.messagesTransiting.remove(comm);
 
         this.askNodesorFinish();
+    }
+
+    public List<Node> getFailedNodes()
+    {
+        List<Node> failedNodes = new ArrayList<>();
+
+        for (Map.Entry<Node, String> e : this.nodes.entrySet())
+        {
+            if (e.getValue().equals(FAILED))
+            {
+                failedNodes.add(e.getKey());
+            }
+        }
+
+        return failedNodes;
     }
 }

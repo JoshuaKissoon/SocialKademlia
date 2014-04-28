@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import kademlia.KademliaNode;
 import kademlia.dht.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
@@ -42,7 +43,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     private static final Byte FAILED = (byte) 0x03;
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final GetParameter params;
     private final List<StorageEntry> contentFound;
     private int numNodesToQuery;
@@ -74,10 +75,10 @@ public class ContentLookupOperationFUC implements Operation, Receiver
      * @param numNodesToQuery The number of nodes to query to get this content. We return the content among these nodes.
      * @param config
      */
-    public ContentLookupOperationFUC(KadServer server, Node localNode, GetParameterFUC params, int numNodesToQuery, KadConfiguration config)
+    public ContentLookupOperationFUC(KadServer server, KademliaNode localNode, GetParameterFUC params, int numNodesToQuery, KadConfiguration config)
     {
         /* Construct our lookup message */
-        this.lookupMessage = new ContentLookupMessageFUC(localNode, params);
+        this.lookupMessage = new ContentLookupMessageFUC(localNode.getNode(), params);
 
         this.server = server;
         this.localNode = localNode;
@@ -103,7 +104,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         try
         {
             /* Set the local node as already asked */
-            nodes.put(this.localNode, ASKED);
+            nodes.put(this.localNode.getNode(), ASKED);
 
             this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
