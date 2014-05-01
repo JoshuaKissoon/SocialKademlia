@@ -51,7 +51,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
     private final Message lookupMessage;
 
-    private boolean contentsFound;
+    private boolean isContentFound;
     private boolean newerContentExist = false; // Whether the content we have is up to date
     private final SortedMap<Node, Byte> nodes;
 
@@ -65,7 +65,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     {
         contentFound = new ArrayList<>();
         messagesTransiting = new HashMap<>();
-        contentsFound = false;
+        isContentFound = false;
     }
 
     /**
@@ -120,7 +120,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             int timeInterval = 100;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
-                if (!this.askNodesorFinish() && !contentsFound)
+                if (!this.askNodesorFinish() && !isContentFound)
                 {
                     wait(timeInterval);
                     totalTimeWaited += timeInterval;
@@ -239,7 +239,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException, RoutingException
     {
-        if (this.contentsFound)
+        if (this.isContentFound)
         {
             return;
         }
@@ -257,14 +257,8 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             System.out.println("Content Received: " + content);
 
             this.contentFound.add(content);
-
-            if (this.contentFound.size() == this.numNodesToQuery)
-            {
-                /* We've got all the content required, let's stop the loopup operation */
-                this.contentsFound = true;
-            }
-
-            /* We've received a newer content than our own, lets specify that newer content exist */
+            /* We've got the content required, let's stop the loopup operation */
+            this.isContentFound = true;
             this.newerContentExist = true;
         }
         else if (incoming instanceof UpToDateContentMessage)
