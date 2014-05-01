@@ -195,7 +195,7 @@ public class KademliaNode
          * @section Read the routing table
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "routingtable.kns"));
-        SocialKadRoutingTable irtbl = new JsonSocialKadRoutingTableSerializer().read(din);
+        SocialKadRoutingTable irtbl = new JsonSocialKadRoutingTableSerializer(iconfig).read(din);
 
         /**
          * @section Read the node state
@@ -485,7 +485,7 @@ public class KademliaNode
          * This will cause a serialization recursion, and in turn a Stack Overflow
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId, this.config) + File.separator + "routingtable.kns"));
-        new JsonSocialKadRoutingTableSerializer().write(this.getRoutingTable(), dout);
+        new JsonSocialKadRoutingTableSerializer(this.config).write(this.getRoutingTable(), dout);
 
         /**
          * @section Save the DHT

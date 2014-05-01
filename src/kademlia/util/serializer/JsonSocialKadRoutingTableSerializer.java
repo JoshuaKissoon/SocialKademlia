@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import kademlia.routing.RoutingTable;
 import java.lang.reflect.Type;
 import java.util.List;
+import kademlia.core.KadConfiguration;
 import kademlia.routing.Contact;
 import kademlia.routing.SocialKadRoutingTable;
 
@@ -48,9 +49,21 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
     {
     }.getType();
 
+    private final KadConfiguration config;
+    
     
     {
         gson = new Gson();
+    }
+
+    /**
+     * Initialize the class
+     *
+     * @param config
+     */
+    public JsonSocialKadRoutingTableSerializer(KadConfiguration config)
+    {
+        this.config = config;
     }
 
     @Override
@@ -80,6 +93,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
 
             /* Read the basic RoutingTable */
             SocialKadRoutingTable tbl = gson.fromJson(reader, RoutingTable.class);
+            tbl.setConfiguration(config);
 
             /* Now get the Contacts and add them back to the RoutingTable */
             List<Contact> contacts = gson.fromJson(reader, contactCollectionType);
