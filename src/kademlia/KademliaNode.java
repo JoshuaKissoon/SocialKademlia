@@ -31,10 +31,11 @@ import kademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
-import kademlia.routing.RoutingTable;
+import kademlia.routing.SocialKadRoutingTable;
+import kademlia.routing.SocialKadRoutingTableImpl;
 import kademlia.util.serializer.JsonDHTSerializer;
-import kademlia.util.serializer.JsonRoutingTableSerializer;
 import kademlia.util.serializer.JsonSerializer;
+import kademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
 
 /**
  * The main Kademlia Node on the network, this node manages everything for this local system.
@@ -56,7 +57,7 @@ public class KademliaNode
     private final transient Node localNode;
     private final transient KadServer server;
     private final transient DHT dht;
-    private transient RoutingTable routingTable;
+    private transient SocialKadRoutingTable routingTable;
     private final int udpPort;
     private transient KadConfiguration config;
 
@@ -87,7 +88,7 @@ public class KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public KademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, RoutingTable routingTable, KadConfiguration config) throws IOException
+    public KademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -121,7 +122,7 @@ public class KademliaNode
         this.isRunning = true;
     }
 
-    public KademliaNode(String ownerId, Node node, int udpPort, RoutingTable routingTable, KadConfiguration config) throws IOException
+    public KademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -139,7 +140,7 @@ public class KademliaNode
                 ownerId,
                 node,
                 udpPort,
-                new RoutingTable(node, config),
+                new SocialKadRoutingTableImpl(node, config),
                 config
         );
     }
@@ -194,7 +195,7 @@ public class KademliaNode
          * @section Read the routing table
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "routingtable.kns"));
-        RoutingTable irtbl = new JsonRoutingTableSerializer().read(din);
+        SocialKadRoutingTable irtbl = new JsonSocialKadRoutingTableSerializer().read(din);
 
         /**
          * @section Read the node state
@@ -484,7 +485,7 @@ public class KademliaNode
          * This will cause a serialization recursion, and in turn a Stack Overflow
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId, this.config) + File.separator + "routingtable.kns"));
-        new JsonRoutingTableSerializer().write(this.getRoutingTable(), dout);
+        new JsonSocialKadRoutingTableSerializer().write(this.getRoutingTable(), dout);
 
         /**
          * @section Save the DHT
@@ -511,7 +512,7 @@ public class KademliaNode
         return nodeStateFolder.toString();
     }
 
-    public RoutingTable getRoutingTable()
+    public SocialKadRoutingTable getRoutingTable()
     {
         return this.routingTable;
     }
