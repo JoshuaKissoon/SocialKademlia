@@ -106,6 +106,10 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             /* Set the local node as already asked */
             nodes.put(this.localNode.getNode(), ASKED);
 
+            /**
+             * We add all nodes here instead of the K-Closest because there may be the case that the K-Closest are offline
+             * - The operation takes care of looking at the K-Closest.
+             */
             this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
             /**
