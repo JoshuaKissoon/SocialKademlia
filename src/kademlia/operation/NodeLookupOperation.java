@@ -96,7 +96,11 @@ public class NodeLookupOperation implements Operation, Receiver
             /* Set the local node as already asked */
             nodes.put(this.localNode.getNode(), ASKED);
 
-            this.addNodes(this.localNode.getRoutingTable().findClosest(this.lookupId, this.config.k()));
+            /**
+             * We add all nodes here instead of the K-Closest because there may be the case that the K-Closest are offline
+             * - The operation takes care of looking at the K-Closest.
+             */
+            this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
