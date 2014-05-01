@@ -63,7 +63,7 @@ public class KademliaNode
     /* Timer used to execute refresh operations */
     private final transient Timer refreshOperationTimer;
     private final transient TimerTask refreshOperationTTask;
-    
+
     /* Whether this node is up and running */
     private boolean isRunning = false;
 
@@ -117,7 +117,7 @@ public class KademliaNode
             }
         };
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
-        
+
         this.isRunning = true;
     }
 
@@ -320,6 +320,28 @@ public class KademliaNode
     }
 
     /**
+     * Method called to do an updated of a content in the local storage; this method updates both cached and un-cached content.
+     *
+     * @param param The parameters of the content to update
+     *
+     * @return StorageEntry with the updated content
+     *
+     * @throws java.io.IOException
+     * @throws kademlia.exceptions.UpToDateContentException
+     */
+    public StorageEntry updateContentLocally(GetParameterFUC param) throws IOException, UpToDateContentException, NoSuchElementException
+    {
+        if (this.dht.contains(param))
+        {
+            return this.getUpdated(param, this.config.k());
+        }
+        else
+        {
+            throw new NoSuchElementException("KademliaNode.updateContentLocally(): This content is not a part of the DHT. ");
+        }
+    }
+
+    /**
      * Get some content stored on the DHT
      *
      * @param param The parameters used to search for the content
@@ -361,7 +383,7 @@ public class KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry getUpdated(GetParameterFUC param, int numNodesToQuery) throws NoSuchElementException, IOException, UpToDateContentException
+    public StorageEntry getUpdated(GetParameterFUC param, int numNodesToQuery) throws IOException, UpToDateContentException
     {
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, numNodesToQuery, this.config);
@@ -424,7 +446,7 @@ public class KademliaNode
         this.refreshOperationTTask.cancel();
         this.refreshOperationTimer.cancel();
         this.refreshOperationTimer.purge();
-        
+
         this.isRunning = false;
 
         /* Save this Kademlia instance's state if required */
