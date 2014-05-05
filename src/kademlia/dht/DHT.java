@@ -348,7 +348,7 @@ public class DHT
     /**
      * @return A List of all StorageEntries for this node
      */
-    public List<StorageEntryMetadata> getStorageEntries()
+    public synchronized List<StorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
     }
