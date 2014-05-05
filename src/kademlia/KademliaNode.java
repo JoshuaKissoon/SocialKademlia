@@ -62,8 +62,8 @@ public class KademliaNode
     private transient KadConfiguration config;
 
     /* Timer used to execute refresh operations */
-    private final transient Timer refreshOperationTimer;
-    private final transient TimerTask refreshOperationTTask;
+    private transient Timer refreshOperationTimer;
+    private transient TimerTask refreshOperationTTask;
 
     /* Whether this node is up and running */
     private boolean isRunning = false;
@@ -98,9 +98,16 @@ public class KademliaNode
         this.routingTable = routingTable;
         this.messageFactory = new MessageFactory(this, this.dht, this.config);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode, this.config);
+        this.startRefreshOperation();
+        this.isRunning = true;
+    }
+    
+    /**
+     * Schedule the recurring refresh operation
+     */
+    public final void startRefreshOperation()
+    {
         this.refreshOperationTimer = new Timer(true);
-
-        /* Schedule Recurring RestoreOperation */
         refreshOperationTTask = new TimerTask()
         {
             @Override
@@ -118,8 +125,14 @@ public class KademliaNode
             }
         };
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
-
-        this.isRunning = true;
+    }
+    
+    public final void stopRefreshOperation()
+    {
+        /* Close off the timer tasks */
+        this.refreshOperationTTask.cancel();
+        this.refreshOperationTimer.cancel();
+        this.refreshOperationTimer.purge();
     }
 
     public KademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
