@@ -200,7 +200,7 @@ class StoredContentManager
     }
 
     @Override
-    public String toString()
+    public synchronized String toString()
     {
         StringBuilder sb = new StringBuilder("Stored Content: \n");
         for (List<StorageEntryMetadata> es : this.entries.values())
