@@ -80,7 +80,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public boolean store(StorageEntry content) throws IOException
+    public synchronized boolean store(StorageEntry content) throws IOException
     {
         boolean cached = content.getContentMetadata().isCached();   // Should we cache this content
 
@@ -143,7 +143,7 @@ public class DHT
         }
     }
 
-    public boolean store(KadContent content) throws IOException
+    public synchronized boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
     }
