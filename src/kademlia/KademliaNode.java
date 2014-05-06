@@ -109,7 +109,7 @@ public class KademliaNode
         this.startRefreshOperation();
         this.isRunning = true;
     }
-    
+
     /**
      * Schedule the recurring refresh operation
      */
@@ -134,7 +134,7 @@ public class KademliaNode
         };
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
     }
-    
+
     public final void stopRefreshOperation()
     {
         /* Close off the timer tasks */
@@ -533,9 +533,20 @@ public class KademliaNode
         return nodeStateFolder.toString();
     }
 
+    /**
+     * @return The routing table for this node.
+     */
     public SocialKadRoutingTable getRoutingTable()
     {
         return this.routingTable;
+    }
+
+    /**
+     * @return The statistician that manages all statistics
+     */
+    public Statistician getStatistician()
+    {
+        return this.statistician;
     }
 
     /**
