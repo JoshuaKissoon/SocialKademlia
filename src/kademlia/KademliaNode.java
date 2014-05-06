@@ -277,8 +277,11 @@ public class KademliaNode
      * */
     public synchronized final void bootstrap(Node n) throws IOException, RoutingException
     {
+        long startTime = System.currentTimeMillis() / 1000L;
         Operation op = new ConnectOperation(this.server, this, n, this.config);
         op.execute();
+        long endTime = System.currentTimeMillis() / 1000L;
+        this.statistician.setBootstrapTime(endTime - startTime);
     }
 
     /**
@@ -375,6 +378,7 @@ public class KademliaNode
      */
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
+        long startTime = System.currentTimeMillis() / 1000L;
         if (this.dht.contains(param))
         {
             /**
@@ -384,6 +388,9 @@ public class KademliaNode
             StorageEntry e = this.dht.get(param);
             if (!e.getContentMetadata().isCached())
             {
+
+                long endTime = System.currentTimeMillis() / 1000L;
+                this.statistician.addContentLookupTime(endTime - startTime);
                 return e;
             }
         }
@@ -391,6 +398,8 @@ public class KademliaNode
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
+        long endTime = System.currentTimeMillis() / 1000L;
+        this.statistician.addContentLookupTime(endTime - startTime);
         return clo.getContentFound();
     }
 
@@ -464,10 +473,7 @@ public class KademliaNode
         /* Shut down the server */
         this.server.shutdown();
 
-        /* Close off the timer tasks */
-        this.refreshOperationTTask.cancel();
-        this.refreshOperationTimer.cancel();
-        this.refreshOperationTimer.purge();
+        this.stopRefreshOperation();
 
         this.isRunning = false;
 
