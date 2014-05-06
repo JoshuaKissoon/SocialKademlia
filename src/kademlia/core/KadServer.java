@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import kademlia.Statistician;
 import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
@@ -35,7 +36,6 @@ public class KadServer
     private final transient KadConfiguration config;
 
     /* Server Objects */
-    private final int udpPort;
     private final DatagramSocket socket;
     private transient boolean isRunning;
     private final Map<Integer, Receiver> receivers;
@@ -47,6 +47,8 @@ public class KadServer
     /* Factories */
     private final MessageFactory messageFactory;
 
+    private final Statistician statistician;
+    
     
     {
         isRunning = true;
@@ -58,23 +60,21 @@ public class KadServer
     /**
      * Initialize our KadServer
      *
-     * @param udpPort   The port to listen on
-     * @param mFactory  Factory used to create messages
-     * @param localNode Local node on which this server runs on
+     * @param udpPort      The port to listen on
+     * @param mFactory     Factory used to create messages
+     * @param localNode    Local node on which this server runs on
      * @param config
+     * @param statistician A statistician to manage the server statistics
      *
      * @throws java.net.SocketException
      */
-    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config) throws SocketException
+    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config, Statistician statistician) throws SocketException
     {
-        this.udpPort = udpPort;
         this.config = config;
-
         this.socket = new DatagramSocket(udpPort);
-
         this.localNode = localNode;
-
         this.messageFactory = mFactory;
+        this.statistician = statistician;
 
         /* Start listening for incoming requests in a new thread */
         this.startListener();
@@ -121,7 +121,6 @@ public class KadServer
         if (recv != null)
         {
             /* Setup the receiver to handle message response */
-            //System.out.println(this.localNode + " Putting Receiver for comm: " + comm + " Receiver: " + recv);
             receivers.put(comm, recv);
             TimerTask task = new TimeoutTask(comm, recv);
             timer.schedule(task, this.config.responseTimeout());
@@ -209,8 +208,6 @@ public class KadServer
 
                         Message msg = messageFactory.createMessage(messCode, din);
                         din.close();
-
-                        //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
 
                         /* Get a receiver for this message */
                         Receiver receiver;
