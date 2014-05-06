@@ -52,7 +52,7 @@ public class MessageFactory
             case UpToDateContentMessage.CODE:
                 return new UpToDateContentMessage(in);
             default:
-                System.out.println(this.localNode + " - No Message handler found for message. Code: " + code);
+                //System.out.println(this.localNode + " - No Message handler found for message. Code: " + code);
                 return new SimpleMessage(in);
 
         }
@@ -73,7 +73,7 @@ public class MessageFactory
             case ContentLookupMessageFUC.CODE:
                 return new ContentLookupReceiverFUC(server, this.localNode, this.dht, this.config);
             default:
-                System.out.println("No receiver found for message. Code: " + code);
+                //System.out.println("No receiver found for message. Code: " + code);
                 return new SimpleReceiver();
         }
     }

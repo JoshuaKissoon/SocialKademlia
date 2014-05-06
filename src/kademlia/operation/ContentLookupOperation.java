@@ -245,7 +245,6 @@ public class ContentLookupOperation implements Operation, Receiver
 
             /* Get the Content and check if it satisfies the required parameters */
             StorageEntry content = msg.getContent();
-            System.out.println("Content Received: " + content);
             this.contentFound = content;
             this.isContentFound = true;
         }
@@ -298,6 +297,8 @@ public class ContentLookupOperation implements Operation, Receiver
 
     /**
      * @return The list of all content found during the lookup operation
+     *
+     * @throws kademlia.exceptions.ContentNotFoundException
      */
     public StorageEntry getContentFound() throws ContentNotFoundException
     {
