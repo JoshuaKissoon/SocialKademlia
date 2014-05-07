@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  * @author Joshua Kissoon
  * @since 20140505
  */
-public class Statistician implements KadStatistician
+public class Statistician implements SocialKadStatistician
 {
 
     /* How much data was sent and received by the server over the network */
@@ -21,7 +21,7 @@ public class Statistician implements KadStatistician
     private long bootstrapTime;
 
     /* Content lookup operation timing & route length */
-    private int numContentLookups;
+    private int numContentLookups, numContentLookupsFUC;
     private long totalContentLookupTime;
     private long totalRouteLength;
 
@@ -82,9 +82,22 @@ public class Statistician implements KadStatistician
     }
 
     @Override
+    public void addContentLookupFUC(long time, int routeLength)
+    {
+        this.addContentLookup(time, routeLength);
+        this.numContentLookupsFUC++;
+    }
+
+    @Override
     public int numContentLookups()
     {
         return this.numContentLookups;
+    }
+
+    @Override
+    public int numContentLookupsFUC()
+    {
+        return this.numContentLookupsFUC;
     }
 
     @Override
@@ -134,6 +147,9 @@ public class Statistician implements KadStatistician
 
         sb.append("Num Content Lookups: ");
         sb.append(this.numContentLookups());
+        sb.append("(FUC: ");
+        sb.append(this.numContentLookupsFUC());
+        sb.append(") ");
         sb.append("; ");
 
         sb.append("Avg Content Lookup Time: ");

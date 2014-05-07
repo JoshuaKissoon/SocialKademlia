@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.KadStatistician;
+import kademlia.SocialKadStatistician;
 import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
@@ -47,7 +47,7 @@ public class KadServer
     /* Factories */
     private final MessageFactory messageFactory;
 
-    private final KadStatistician statistician;
+    private final SocialKadStatistician statistician;
 
     
     {
@@ -68,7 +68,7 @@ public class KadServer
      *
      * @throws java.net.SocketException
      */
-    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config, KadStatistician statistician) throws SocketException
+    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config, SocialKadStatistician statistician) throws SocketException
     {
         this.config = config;
         this.socket = new DatagramSocket(udpPort);

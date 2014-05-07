@@ -72,7 +72,7 @@ public class KademliaNode
     private final transient MessageFactory messageFactory;
 
     /* Statistics */
-    private final KadStatistician statistician;
+    private final SocialKadStatistician statistician;
 
     
     {
@@ -456,7 +456,7 @@ public class KademliaNode
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
+        this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength());
 
         StorageEntry latest = clo.getContentFound();
 
@@ -588,7 +588,7 @@ public class KademliaNode
     /**
      * @return The statistician that manages all statistics
      */
-    public KadStatistician getStatistician()
+    public SocialKadStatistician getStatistician()
     {
         return this.statistician;
     }
