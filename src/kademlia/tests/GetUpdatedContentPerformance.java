@@ -16,7 +16,7 @@ import kademlia.node.NodeId;
 public class GetUpdatedContentPerformance
 {
 
-    public final static int NUM_RUNS = 1000;
+    public final static int NUM_RUNS = 10;
     public final static int NUM_KADS = 10;
 
     DHTContentImpl c;

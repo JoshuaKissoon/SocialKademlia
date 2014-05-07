@@ -378,7 +378,6 @@ public class KademliaNode
      */
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
-        long startTime = System.nanoTime();
         if (this.dht.contains(param))
         {
             /* The content is on our DHT */
@@ -387,7 +386,6 @@ public class KademliaNode
             {
                 /**
                  * If it's cached, we check for an updated version
-                 *
                  * @note Here we don't log the statistic because the getUpdated will log for us
                  */
                 GetParameterFUC gpf = new GetParameterFUC(e.getContentMetadata());
@@ -405,13 +403,12 @@ public class KademliaNode
             else
             {
                 /* If it's not cached, we just return it since our node is one of the K-Closest */
-                long endTime = System.nanoTime();
-                this.statistician.addContentLookup(endTime - startTime, 0);
                 return e;
             }
         }
 
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        long startTime = System.nanoTime();
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();

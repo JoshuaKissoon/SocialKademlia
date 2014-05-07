@@ -55,4 +55,9 @@ public interface KadConfiguration
      * @return The folder path
      */
     public String getNodeDataFolder(String ownerId);
+
+    /**
+     * @return Whether we're in a testing or production system.
+     */
+    public boolean isTesting();
 }
