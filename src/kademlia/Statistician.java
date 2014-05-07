@@ -21,8 +21,8 @@ public class Statistician
     private int numContentLookups;
     private long totalContentLookupTime;
     private long totalRouteLength;
-    
 
+    
     {
         this.totalDataSent = 0;
         this.totalDataReceived = 0;
@@ -114,5 +114,10 @@ public class Statistician
     public long averageContentLookupTime()
     {
         return this.totalContentLookupTime / this.numContentLookups;
+    }
+
+    public double averageContentLookupRouteLength()
+    {
+        return (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
     }
 }
