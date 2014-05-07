@@ -385,7 +385,11 @@ public class KademliaNode
             StorageEntry e = this.dht.get(param);
             if (e.getContentMetadata().isCached())
             {
-                /* If it's cached, we check for an updated version */
+                /**
+                 * If it's cached, we check for an updated version
+                 *
+                 * @note Here we don't log the statistic because the getUpdated will log for us
+                 */
                 GetParameterFUC gpf = new GetParameterFUC(e.getContentMetadata());
                 try
                 {
@@ -429,8 +433,11 @@ public class KademliaNode
     public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        long startTime = System.nanoTime();
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();
+        long endTime = System.nanoTime();
+        this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
 
         StorageEntry latest = clo.getContentFound();
 
