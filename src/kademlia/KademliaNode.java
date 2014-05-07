@@ -305,6 +305,22 @@ public class KademliaNode
     }
 
     /**
+     * Put the data on the network and also cache a copy locally
+     *
+     * @param content The content to store
+     *
+     * @return How many nodes the content has been stored at
+     *
+     * @throws java.io.IOException
+     */
+    public synchronized int putAndCache(KadContent content) throws IOException
+    {
+        this.cache(content);
+
+        return this.put(content);
+    }
+
+    /**
      * Store a content on the local node's DHT
      *
      * @param content The content to put on the DHT
