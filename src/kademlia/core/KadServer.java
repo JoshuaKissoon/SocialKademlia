@@ -208,6 +208,23 @@ public class KadServer
                     /* Lets inform the statistician that we've received some data */
                     this.statistician.receivedData(packet.getLength());
 
+                    if (this.config.isTesting())
+                    {
+                        /**
+                         * Simulating network latency
+                         * We pause for 1 millisecond/100 bytes
+                         */
+                        int pause = packet.getLength() / 100;
+                        try
+                        {
+                            Thread.sleep(pause);
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            
+                        }
+                    }
+
                     /* We've received a packet, now handle it */
                     try (ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());
                             DataInputStream din = new DataInputStream(bin);)

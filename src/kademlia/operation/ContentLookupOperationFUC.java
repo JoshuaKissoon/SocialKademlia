@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import kademlia.KademliaNode;
-import kademlia.dht.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.GetParameterFUC;
@@ -115,7 +114,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
              * keey trying until config.operationTimeout() time has expired
              */
             int totalTimeWaited = 0;
-            int timeInterval = 100;     // We re-check every 300 milliseconds
+            int timeInterval = 10;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish() && !isContentFound)

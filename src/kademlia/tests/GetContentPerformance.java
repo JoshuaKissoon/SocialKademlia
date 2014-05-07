@@ -16,7 +16,7 @@ import kademlia.node.NodeId;
 public class GetContentPerformance
 {
 
-    public final static int NUM_RUNS = 10;
+    public final static int NUM_RUNS = 1000;
     public final static int NUM_KADS = 10;
 
     DHTContentImpl c;
@@ -61,16 +61,17 @@ public class GetContentPerformance
         }
         catch (IOException ex)
         {
-
+            ex.printStackTrace();
         }
 
         /* Lets do the get operations */
+        GetParameter gp = new GetParameter(c);
         startTime = System.nanoTime();
         for (int i = 0; i < NUM_RUNS; i++)
         {
             try
             {
-                StorageEntry cc = kads[1].get(new GetParameter(c));
+                StorageEntry cc = kads[1].get(gp);
             }
             catch (ContentNotFoundException | IOException ex)
             {
