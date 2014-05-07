@@ -358,7 +358,7 @@ public class KademliaNode
     {
         if (this.dht.contains(param))
         {
-            return this.getUpdated(param, this.config.k());
+            return this.getUpdated(param);
         }
         else
         {
@@ -390,7 +390,7 @@ public class KademliaNode
             {
 
                 long endTime = System.nanoTime();
-                this.statistician.addContentLookupTime(endTime - startTime);
+                this.statistician.addContentLookup(endTime - startTime, 0);
                 return e;
             }
         }
@@ -399,7 +399,7 @@ public class KademliaNode
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookupTime(endTime - startTime);
+        this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
         return clo.getContentFound();
     }
 
@@ -414,13 +414,13 @@ public class KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry getUpdated(GetParameterFUC param, int numNodesToQuery) throws IOException, UpToDateContentException
+    public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-        ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, numNodesToQuery, this.config);
+        ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();
 
-        StorageEntry latest = clo.getLatestContentFound();
+        StorageEntry latest = clo.getContentFound();
 
         /* If we have this content locally, lets update it too */
         try

@@ -86,7 +86,7 @@ public class ContentRefreshOperation implements Operation
             /* Delete any content on this node that this node is not one of the K-Closest nodes to */
             try
             {
-                if (!closestNodes.contains(this.localNode))
+                if (!closestNodes.contains(this.localNode.getNode()))
                 {
                     this.dht.remove(e);
                 }
@@ -100,12 +100,12 @@ public class ContentRefreshOperation implements Operation
             /* If this is a cached content, lets check for an updated version and update local storage */
             if (e.isCached())
             {
-                ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, new GetParameterFUC(e), this.config.k(), this.config);
+                ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, new GetParameterFUC(e), this.config);
                 clo.execute();
                 
                 try
                 {
-                    StorageEntry latest = clo.getLatestContentFound();
+                    StorageEntry latest = clo.getContentFound();
                     this.dht.update(latest);
                 }
                 catch (UpToDateContentException ex)

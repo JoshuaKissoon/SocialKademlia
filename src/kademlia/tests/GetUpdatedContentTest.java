@@ -52,7 +52,7 @@ public class GetUpdatedContentTest
                 /* Lets see if there is an updated version of the content */
                 System.out.println("\n\nRetrieving Content C1");
                 GetParameterFUC gp = new GetParameterFUC(c1.getKey(), DHTContentImpl.TYPE, c1.getOwnerId(), c1.getLastUpdatedTimestamp());
-                StorageEntry conte = kad2.getUpdated(gp, 4);
+                StorageEntry conte = kad2.getUpdated(gp);
                 System.out.println("Updated Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
                 System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
             }
@@ -69,7 +69,7 @@ public class GetUpdatedContentTest
 
                 /* We use c2 old TS, since that's the TS of the version kad2 has */
                 GetParameterFUC gp = new GetParameterFUC(c2.getKey(), DHTContentImpl.TYPE, c2.getOwnerId(), c2OldTs);
-                StorageEntry conte = kad2.getUpdated(gp, 4);
+                StorageEntry conte = kad2.getUpdated(gp);
                 System.out.println("Updated Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
                 System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
 

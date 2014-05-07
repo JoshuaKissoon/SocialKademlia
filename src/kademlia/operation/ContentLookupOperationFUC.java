@@ -28,7 +28,7 @@ import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 
 /**
- * Looks up a specified Content and returns it
+ * Looks up a specified identifier and returns the value associated with it
  *
  * @author Joshua Kissoon
  * @since 20140422
@@ -44,9 +44,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
     private final KadServer server;
     private final KademliaNode localNode;
-    private final GetParameter params;
-    private final List<StorageEntry> contentFound;
-    private int numNodesToQuery;
+    private StorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final Message lookupMessage;
@@ -61,29 +59,29 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     /* Used to sort nodes */
     private final Comparator comparator;
 
+    /* Statistical information */
+    private int routeLength;    // Length of the route to find this content
+
     
     {
-        contentFound = new ArrayList<>();
         messagesTransiting = new HashMap<>();
         isContentFound = false;
+        routeLength = 1;
     }
 
     /**
      * @param server
      * @param localNode
-     * @param params          The parameters to search for the content which we need to find
-     * @param numNodesToQuery The number of nodes to query to get this content. We return the content among these nodes.
+     * @param params    The parameters to search for the content which we need to find
      * @param config
      */
-    public ContentLookupOperationFUC(KadServer server, KademliaNode localNode, GetParameterFUC params, int numNodesToQuery, KadConfiguration config)
+    public ContentLookupOperationFUC(KadServer server, KademliaNode localNode, GetParameterFUC params, KadConfiguration config)
     {
         /* Construct our lookup message */
         this.lookupMessage = new ContentLookupMessageFUC(localNode.getNode(), params);
 
         this.server = server;
         this.localNode = localNode;
-        this.params = params;
-        this.numNodesToQuery = numNodesToQuery;
         this.config = config;
 
         /**
@@ -254,10 +252,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
             /* Get the Content and check if it satisfies the required parameters */
             StorageEntry content = msg.getContent();
-            System.out.println("Content Received: " + content);
-
-            this.contentFound.add(content);
-            /* We've got the content required, let's stop the loopup operation */
+            this.contentFound = content;
             this.isContentFound = true;
             this.newerContentExist = true;
         }
@@ -265,12 +260,16 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         {
             /**
              * The content we have is up to date
-             * No sense in adding our own content to the resultset, so lets just decrement the number of nodes left to query
+             * No sense in adding our own content to the resultset, so lets just exit
              */
-            numNodesToQuery--;
+            this.newerContentExist = false;
+            this.isContentFound = true;
         }
         else
         {
+            /* Our hop length is increased */
+            this.routeLength++;
+
             /* The reply received is a NodeReplyMessage with nodes closest to the content needed */
             NodeReplyMessage msg = (NodeReplyMessage) incoming;
 
@@ -318,44 +317,20 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
     /**
      * @return The list of all content found during the lookup operation
-     */
-    public List<StorageEntry> getContentFound()
-    {
-        return this.contentFound;
-    }
-
-    /**
-     * Check the content found and get the most up to date version
-     *
-     * @return The latest version of the content from all found
      *
      * @throws kademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry getLatestContentFound() throws UpToDateContentException
+    public StorageEntry getContentFound() throws UpToDateContentException
     {
-        /* We don't have any newer content */
-        if (this.contentFound.isEmpty())
+        /* Check if we have newer content */
+        if (this.newerContentExist)
+        {
+            return this.contentFound;
+        }
+        else
         {
             throw new UpToDateContentException("The content is up to date");
         }
-
-        /* We have some newer content, lets get it */
-        StorageEntry latest = null;
-
-        for (StorageEntry e : this.contentFound)
-        {
-            if (latest == null)
-            {
-                latest = e;
-            }
-
-            if (e.getContentMetadata().getLastUpdatedTimestamp() > latest.getContentMetadata().getLastUpdatedTimestamp())
-            {
-                latest = e;
-            }
-        }
-
-        return latest;
     }
 
     /**
@@ -364,5 +339,13 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     public boolean newerContentExist()
     {
         return this.newerContentExist;
+    }
+
+    /**
+     * @return How many hops it took in order to get to the content.
+     */
+    public int routeLength()
+    {
+        return this.routeLength;
     }
 }
