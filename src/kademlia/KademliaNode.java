@@ -330,6 +330,11 @@ public class KademliaNode
         this.dht.cache(content);
     }
 
+    private synchronized void cache(StorageEntry entry) throws IOException
+    {
+        this.dht.cache(entry);
+    }
+
     /**
      * Get some content cached locally on the DHT.
      *
@@ -386,6 +391,7 @@ public class KademliaNode
             {
                 /**
                  * If it's cached, we check for an updated version
+                 *
                  * @note Here we don't log the statistic because the getUpdated will log for us
                  */
                 GetParameterFUC gpf = new GetParameterFUC(e.getContentMetadata());
@@ -417,10 +423,26 @@ public class KademliaNode
     }
 
     /**
+     * Get a content and cache it.
+     *
+     * @param gp
+     *
+     * @return The StorageEntry with the content
+     *
+     * @throws java.io.IOException
+     * @throws kademlia.exceptions.ContentNotFoundException
+     */
+    public StorageEntry getAndCache(final GetParameter gp) throws IOException, ContentNotFoundException
+    {
+        StorageEntry e = this.get(gp);
+        this.cache(e);
+        return e;
+    }
+
+    /**
      * Get some content stored on the DHT if there is a newer version than our current version.
      *
-     * @param param           The parameters used to search for the content
-     * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
+     * @param param The parameters used to search for the content
      *
      * @return StorageEntry The content
      *
