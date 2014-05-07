@@ -20,8 +20,8 @@ public class StorageEntryMetadata
     private final long updatedTs;
 
     private boolean isCached = false;
-    
-        /* This value is the last time this content was last updated from the network */
+
+    /* This value is the last time this content was last updated from the network */
     private long lastRepublished;
 
     public StorageEntryMetadata(KadContent content)

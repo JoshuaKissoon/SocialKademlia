@@ -381,14 +381,26 @@ public class KademliaNode
         long startTime = System.nanoTime();
         if (this.dht.contains(param))
         {
-            /**
-             * If the content exist in our own DHT, then return it if it's not a cached entry.
-             * If e is cached means this node is not one of the k-closest, so there may be a more updated version.
-             */
+            /* The content is on our DHT */
             StorageEntry e = this.dht.get(param);
-            if (!e.getContentMetadata().isCached())
+            if (e.getContentMetadata().isCached())
             {
-
+                /* If it's cached, we check for an updated version */
+                GetParameterFUC gpf = new GetParameterFUC(e.getContentMetadata());
+                try
+                {
+                    /* Get and return an updated version of the content */
+                    return this.getUpdated(gpf);
+                }
+                catch (UpToDateContentException ex)
+                {
+                    /* well the version we have is the latest, lets just return that */
+                    return e;
+                }
+            }
+            else
+            {
+                /* If it's not cached, we just return it since our node is one of the K-Closest */
                 long endTime = System.nanoTime();
                 this.statistician.addContentLookup(endTime - startTime, 0);
                 return e;
