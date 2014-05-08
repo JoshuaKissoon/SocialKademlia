@@ -108,6 +108,12 @@ public class Statistician implements SocialKadStatistician
     }
 
     @Override
+    public int numFUCUpdatesFound()
+    {
+        return this.numFUCUpdatesFound;
+    }
+
+    @Override
     public long totalContentLookupTime()
     {
         return this.totalContentLookupTime;

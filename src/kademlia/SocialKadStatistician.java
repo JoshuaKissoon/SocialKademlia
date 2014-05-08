@@ -24,4 +24,9 @@ public interface SocialKadStatistician extends KadStatistician
      * @return The total number of content lookups performed for updated content.
      */
     public int numContentLookupsFUC();
+
+    /**
+     * @return How many updated content were found using the GUP RPC
+     */
+    public int numFUCUpdatesFound();
 }
