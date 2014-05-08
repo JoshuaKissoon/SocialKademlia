@@ -65,14 +65,11 @@ public class KademliaNode
     private transient Timer refreshOperationTimer;
     private transient TimerTask refreshOperationTTask;
 
-    /* Whether this node is up and running */
-    private boolean isRunning = false;
-
     /* Factories */
     private final transient MessageFactory messageFactory;
 
     /* Statistics */
-    private final SocialKadStatistician statistician;
+    private final transient SocialKadStatistician statistician;
 
     
     {
@@ -107,7 +104,6 @@ public class KademliaNode
         this.messageFactory = new MessageFactory(this, this.dht, this.config);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode, this.config, this.statistician);
         this.startRefreshOperation();
-        this.isRunning = true;
     }
 
     /**
@@ -528,9 +524,7 @@ public class KademliaNode
         this.server.shutdown();
 
         this.stopRefreshOperation();
-
-        this.isRunning = false;
-
+        
         /* Save this Kademlia instance's state if required */
         if (saveState)
         {
