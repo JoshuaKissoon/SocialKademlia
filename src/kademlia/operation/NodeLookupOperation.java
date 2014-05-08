@@ -115,8 +115,8 @@ public class NodeLookupOperation implements Operation, Receiver
             }
 
             /**
-             * There is no need to throw an exception here! 
-             * If the operation times out means we didn't get replies from all nodes, 
+             * There is no need to throw an exception here!
+             * If the operation times out means we didn't get replies from all nodes,
              * so lets just simply return the K-Closest nodes we knoe
              */
 //            if (error)
@@ -273,22 +273,25 @@ public class NodeLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException
     {
-        /* We receive a NodeReplyMessage with a set of nodes, read this message */
-        NodeReplyMessage msg = (NodeReplyMessage) incoming;
+        if (incoming instanceof NodeReplyMessage)
+        {
+            /* We receive a NodeReplyMessage with a set of nodes, read this message */
+            NodeReplyMessage msg = (NodeReplyMessage) incoming;
 
-        /* Add the origin node to our routing table */
-        Node origin = msg.getOrigin();
-        this.localNode.getRoutingTable().insert(origin);
+            /* Add the origin node to our routing table */
+            Node origin = msg.getOrigin();
+            this.localNode.getRoutingTable().insert(origin);
 
-        /* Set that we've completed ASKing the origin node */
-        this.nodes.put(origin, ASKED);
+            /* Set that we've completed ASKing the origin node */
+            this.nodes.put(origin, ASKED);
 
-        /* Remove this msg from messagesTransiting since it's completed now */
-        this.messagesTransiting.remove(comm);
+            /* Remove this msg from messagesTransiting since it's completed now */
+            this.messagesTransiting.remove(comm);
 
-        /* Add the received nodes to our nodes list to query */
-        this.addNodes(msg.getNodes());
-        this.askNodesorFinish();
+            /* Add the received nodes to our nodes list to query */
+            this.addNodes(msg.getNodes());
+            this.askNodesorFinish();
+        }
     }
 
     /**
