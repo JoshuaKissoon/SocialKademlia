@@ -124,7 +124,7 @@ public class KademliaNode
                 }
                 catch (IOException e)
                 {
-                    System.err.println("Refresh Operation Failed; Message: " + e.getMessage());
+                    System.err.println("KademliaNode: Refresh Operation Failed; Message: " + e.getMessage());
                 }
             }
         };

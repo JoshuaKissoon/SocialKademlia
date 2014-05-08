@@ -47,7 +47,7 @@ public class Statistician implements SocialKadStatistician
     @Override
     public long getTotalDataSent()
     {
-        return this.totalDataSent;
+        return this.totalDataSent / 1000L;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Statistician implements SocialKadStatistician
     @Override
     public long getTotalDataReceived()
     {
-        return this.totalDataReceived;
+        return this.totalDataReceived / 1000L;
     }
 
     @Override
