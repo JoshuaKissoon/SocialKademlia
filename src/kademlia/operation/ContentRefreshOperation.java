@@ -76,7 +76,7 @@ public class ContentRefreshOperation implements Operation
             for (Node n : closestNodes)
             {
                 /*We don't need to again store the content locally, it's already here*/
-                if (!n.equals(this.localNode))
+                if (!n.equals(this.localNode.getNode()))
                 {
                     /* Send a contentstore operation to the K-Closest nodes */
                     this.server.sendMessage(n, msg, null);
