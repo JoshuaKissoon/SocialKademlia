@@ -22,6 +22,7 @@ public class Statistician implements SocialKadStatistician
 
     /* Content lookup operation timing & route length */
     private int numContentLookups, numContentLookupsFUC;
+    private int numFUCUpdatesFound;
     private long totalContentLookupTime;
     private long totalRouteLength;
 
@@ -33,6 +34,7 @@ public class Statistician implements SocialKadStatistician
         this.numContentLookups = 0;
         this.totalContentLookupTime = 0;
         this.totalRouteLength = 0;
+        this.numFUCUpdatesFound = 0;
     }
 
     @Override
@@ -82,10 +84,15 @@ public class Statistician implements SocialKadStatistician
     }
 
     @Override
-    public void addContentLookupFUC(long time, int routeLength)
+    public void addContentLookupFUC(long time, int routeLength, boolean updateAvailable)
     {
         this.addContentLookup(time, routeLength);
         this.numContentLookupsFUC++;
+
+        if (updateAvailable)
+        {
+            this.numFUCUpdatesFound++;
+        }
     }
 
     @Override

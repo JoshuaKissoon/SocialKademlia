@@ -309,7 +309,7 @@ public class KademliaNode
      *
      * @param content The content to store
      *
-     * @return How many nodes the content has been stored at
+     * @return How many nodes the content has been stored at excluding the local node.
      *
      * @throws java.io.IOException
      */
@@ -472,7 +472,7 @@ public class KademliaNode
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength());
+        this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength(), clo.newerContentExist());
 
         StorageEntry latest = clo.getContentFound();
 
