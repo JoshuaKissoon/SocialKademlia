@@ -233,7 +233,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public synchronized StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -262,7 +262,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
+    public synchronized StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
@@ -291,12 +291,12 @@ public class DHT
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public void remove(KadContent content) throws ContentNotFoundException
+    public synchronized void remove(KadContent content) throws ContentNotFoundException
     {
         this.remove(new StorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public synchronized void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         /* If it's cached data, we don't remove it */
         if (this.contentManager.get(entry).isCached())
@@ -326,7 +326,7 @@ public class DHT
      *
      * @return String The name of the folder
      */
-    private String getContentStorageFolderName(KademliaId key)
+    private synchronized String getContentStorageFolderName(KademliaId key)
     {
         /**
          * Each content is stored in a folder named after the first 10 characters of the NodeId
@@ -367,7 +367,7 @@ public class DHT
      *
      * @param ientries The entries to add
      */
-    public void putStorageEntries(List<StorageEntryMetadata> ientries)
+    public synchronized void putStorageEntries(List<StorageEntryMetadata> ientries)
     {
         for (StorageEntryMetadata e : ientries)
         {
