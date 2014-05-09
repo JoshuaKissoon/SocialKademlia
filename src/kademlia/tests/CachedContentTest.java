@@ -6,7 +6,7 @@ import kademlia.core.DefaultConfiguration;
 import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.dht.GetParameter;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Testing the cache content system
@@ -22,11 +22,11 @@ public class CachedContentTest
         try
         {
             /* Setting up 2 Kad networks */
-            final KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF456789djem45674DH"), 12049);
-            final KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("AJDHR678947584567464"), 4585);
-            final KademliaNode kad3 = new KademliaNode("Shameer", new NodeId("AS84k6789KRNS45KFJ8W"), 8104);
-            final KademliaNode kad4 = new KademliaNode("Lokesh.", new NodeId("AS84kUD89YU58456dyrj"), 8335);
-            final KademliaNode kad5 = new KademliaNode("Chandu.", new NodeId("AS84kUD894758456dyrj"), 13345);
+            final KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF456789djem45674DH"), 12049);
+            final KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("AJDHR678947584567464"), 4585);
+            final KademliaNode kad3 = new KademliaNode("Shameer", new KademliaId("AS84k6789KRNS45KFJ8W"), 8104);
+            final KademliaNode kad4 = new KademliaNode("Lokesh.", new KademliaId("AS84kUD89YU58456dyrj"), 8335);
+            final KademliaNode kad5 = new KademliaNode("Chandu.", new KademliaId("AS84kUD894758456dyrj"), 13345);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");
@@ -35,7 +35,7 @@ public class CachedContentTest
             kad4.bootstrap(kad2.getNode());
             kad5.bootstrap(kad4.getNode());
 
-            DHTContentImpl c = new DHTContentImpl(new NodeId("AS84k678947584567465"), kad1.getOwnerId());
+            DHTContentImpl c = new DHTContentImpl(new KademliaId("AS84k678947584567465"), kad1.getOwnerId());
             c.setData("Setting the data");
 
             System.out.println("\n Content ID: " + c.getKey());

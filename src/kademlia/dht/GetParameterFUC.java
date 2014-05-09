@@ -1,6 +1,6 @@
 package kademlia.dht;
 
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * A GET request can get content based on Key, Owner, Type, etc
@@ -26,7 +26,7 @@ public class GetParameterFUC extends GetParameter
      * @param type
      * @param updatedTs The last updated Timestamp
      */
-    public GetParameterFUC(NodeId key, String type, long updatedTs)
+    public GetParameterFUC(KademliaId key, String type, long updatedTs)
     {
         super(key, type);
         this.lastUpdatedTS = updatedTs;
@@ -40,7 +40,7 @@ public class GetParameterFUC extends GetParameter
      * @param updatedTS
      * @param owner
      */
-    public GetParameterFUC(NodeId key, String type, String owner, long updatedTS)
+    public GetParameterFUC(KademliaId key, String type, String owner, long updatedTS)
     {
         super(key, type, owner);
         this.lastUpdatedTS = updatedTS;
