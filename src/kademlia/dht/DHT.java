@@ -205,7 +205,7 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private synchronized StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -219,7 +219,7 @@ public class DHT
      *
      * @return boolean Whether any content exist that satisfy the criteria
      */
-    public boolean contains(GetParameter param)
+    public synchronized boolean contains(GetParameter param)
     {
         return this.contentManager.contains(param);
     }

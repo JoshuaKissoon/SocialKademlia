@@ -291,7 +291,7 @@ public class KademliaNode
      * @throws java.io.IOException
      *
      */
-    public synchronized int put(KadContent content) throws IOException
+    public int put(KadContent content) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, content, this.dht, this.config);
         sop.execute();
@@ -309,7 +309,7 @@ public class KademliaNode
      *
      * @throws java.io.IOException
      */
-    public synchronized int putAndCache(KadContent content) throws IOException
+    public int putAndCache(KadContent content) throws IOException
     {
         this.cache(content);
 
@@ -323,7 +323,7 @@ public class KademliaNode
      *
      * @throws java.io.IOException
      */
-    public synchronized void putLocally(KadContent content) throws IOException
+    public void putLocally(KadContent content) throws IOException
     {
         this.dht.store(content);
     }
@@ -337,12 +337,12 @@ public class KademliaNode
      * @throws java.io.IOException
      *
      */
-    public synchronized void cache(KadContent content) throws IOException
+    public void cache(KadContent content) throws IOException
     {
         this.dht.cache(content);
     }
 
-    private synchronized void cache(StorageEntry entry) throws IOException
+    private void cache(StorageEntry entry) throws IOException
     {
         this.dht.cache(entry);
     }
