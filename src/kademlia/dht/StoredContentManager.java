@@ -203,6 +203,7 @@ class StoredContentManager
     public synchronized String toString()
     {
         StringBuilder sb = new StringBuilder("Stored Content: \n");
+        int count = 0;
         for (List<StorageEntryMetadata> es : this.entries.values())
         {
             if (entries.size() < 1)
@@ -212,6 +213,8 @@ class StoredContentManager
 
             for (StorageEntryMetadata e : es)
             {
+                sb.append(++count);
+                sb.append(". ");
                 sb.append(e);
                 sb.append("\n");
             }

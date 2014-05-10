@@ -100,7 +100,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 10;     // We re-check every 10 milliseconds
+            int timeInterval = 10;     // We re-check every n milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish())
@@ -273,25 +273,27 @@ public class NodeLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException
     {
-        if (incoming instanceof NodeReplyMessage)
+        if (!(incoming instanceof NodeReplyMessage))
         {
-            /* We receive a NodeReplyMessage with a set of nodes, read this message */
-            NodeReplyMessage msg = (NodeReplyMessage) incoming;
-
-            /* Add the origin node to our routing table */
-            Node origin = msg.getOrigin();
-            this.localNode.getRoutingTable().insert(origin);
-
-            /* Set that we've completed ASKing the origin node */
-            this.nodes.put(origin, ASKED);
-
-            /* Remove this msg from messagesTransiting since it's completed now */
-            this.messagesTransiting.remove(comm);
-
-            /* Add the received nodes to our nodes list to query */
-            this.addNodes(msg.getNodes());
-            this.askNodesorFinish();
+            /* Not sure why we get a message of a different type here... @todo Figure it out. */
+            return;
         }
+        /* We receive a NodeReplyMessage with a set of nodes, read this message */
+        NodeReplyMessage msg = (NodeReplyMessage) incoming;
+
+        /* Add the origin node to our routing table */
+        Node origin = msg.getOrigin();
+        this.localNode.getRoutingTable().insert(origin);
+
+        /* Set that we've completed ASKing the origin node */
+        this.nodes.put(origin, ASKED);
+
+        /* Remove this msg from messagesTransiting since it's completed now */
+        this.messagesTransiting.remove(comm);
+
+        /* Add the received nodes to our nodes list to query */
+        this.addNodes(msg.getNodes());
+        this.askNodesorFinish();
     }
 
     /**
