@@ -25,6 +25,7 @@ import kademlia.message.NodeReplyMessage;
 import kademlia.message.UpToDateContentMessage;
 import kademlia.node.KeyComparator;
 import kademlia.node.Node;
+import kademlia.util.RouteLengthChecker;
 
 /**
  * Looks up a specified identifier and returns the value associated with it
@@ -59,13 +60,12 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     private final Comparator comparator;
 
     /* Statistical information */
-    private int routeLength;    // Length of the route to find this content
+    private RouteLengthChecker routeLengthChecker;
 
     
     {
         messagesTransiting = new HashMap<>();
         isContentFound = false;
-        routeLength = 1;
     }
 
     /**
@@ -107,14 +107,18 @@ public class ContentLookupOperationFUC implements Operation, Receiver
              * We add all nodes here instead of the K-Closest because there may be the case that the K-Closest are offline
              * - The operation takes care of looking at the K-Closest.
              */
-            this.addNodes(this.localNode.getRoutingTable().getAllNodes());
+            List<Node> allNodes = this.localNode.getRoutingTable().getAllNodes();
+            this.addNodes(allNodes);
+
+            /* Also add the initial set of nodes to the routeLengthChecker */
+            this.routeLengthChecker.addInitialNodes(allNodes);
 
             /**
              * If we haven't found the requested amount of content as yet,
              * keey trying until config.operationTimeout() time has expired
              */
             int totalTimeWaited = 0;
-            int timeInterval = 10;     // We re-check every 300 milliseconds
+            int timeInterval = 10;     // We re-check every n milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish() && !isContentFound)
@@ -266,9 +270,6 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         }
         else
         {
-            /* Our hop length is increased */
-            this.routeLength++;
-
             /* The reply received is a NodeReplyMessage with nodes closest to the content needed */
             NodeReplyMessage msg = (NodeReplyMessage) incoming;
 
@@ -281,6 +282,9 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
             /* Remove this msg from messagesTransiting since it's completed now */
             this.messagesTransiting.remove(comm);
+
+            /* Add the received nodes to the routeLengthChecker */
+            this.routeLengthChecker.addNodes(msg.getNodes(), origin);
 
             /* Add the received nodes to our nodes list to query */
             this.addNodes(msg.getNodes());
@@ -345,6 +349,6 @@ public class ContentLookupOperationFUC implements Operation, Receiver
      */
     public int routeLength()
     {
-        return this.routeLength;
+        return this.routeLengthChecker.getRouteLength();
     }
 }
