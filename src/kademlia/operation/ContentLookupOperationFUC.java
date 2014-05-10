@@ -60,12 +60,13 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     private final Comparator comparator;
 
     /* Statistical information */
-    private RouteLengthChecker routeLengthChecker;
+    private final RouteLengthChecker routeLengthChecker;
 
     
     {
         messagesTransiting = new HashMap<>();
         isContentFound = false;
+        routeLengthChecker = new RouteLengthChecker();
     }
 
     /**
