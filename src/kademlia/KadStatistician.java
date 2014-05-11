@@ -6,7 +6,7 @@ package kademlia;
  * These statistics are temporary and will be lost when Kad is shut down.
  *
  * @author Joshua Kissoon
- * @since 20140507
+ * @since 20140507 
  */
 public interface KadStatistician
 {
