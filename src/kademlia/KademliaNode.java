@@ -293,7 +293,23 @@ public class KademliaNode
      */
     public int put(KadContent content) throws IOException
     {
-        StoreOperation sop = new StoreOperation(this.server, this, content, this.dht, this.config);
+        return this.put(new StorageEntry(content));
+    }
+
+    /**
+     * Stores the specified value under the given key
+     * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
+     *
+     * @param entry The StorageEntry with the content to put onto the DHT
+     *
+     * @return Integer How many nodes the content was stored on
+     *
+     * @throws java.io.IOException
+     *
+     */
+    private int put(StorageEntry entry) throws IOException
+    {
+        StoreOperation sop = new StoreOperation(this.server, this, entry, this.dht, this.config);
         sop.execute();
 
         /* Return how many nodes the content was stored on */
@@ -311,9 +327,10 @@ public class KademliaNode
      */
     public int putAndCache(KadContent content) throws IOException
     {
-        this.cache(content);
+        StorageEntry entry = new StorageEntry(content);
 
-        return this.put(content);
+        this.cache(entry);
+        return this.put(entry);
     }
 
     /**
@@ -325,7 +342,7 @@ public class KademliaNode
      */
     public void putLocally(KadContent content) throws IOException
     {
-        this.dht.store(content);
+        this.dht.store(new StorageEntry(content));
     }
 
     /**
@@ -524,7 +541,7 @@ public class KademliaNode
         this.server.shutdown();
 
         this.stopRefreshOperation();
-        
+
         /* Save this Kademlia instance's state if required */
         if (saveState)
         {
