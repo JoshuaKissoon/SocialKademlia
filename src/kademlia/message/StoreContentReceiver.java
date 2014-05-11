@@ -4,6 +4,7 @@ import java.io.IOException;
 import kademlia.KademliaNode;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
+import kademlia.dht.StorageEntry;
 
 /**
  * Receiver for incoming StoreContentMessage
@@ -37,7 +38,9 @@ public class StoreContentReceiver implements Receiver
         try
         {
             /* Store this Content into the DHT */
-            this.dht.store(msg.getContent());
+            StorageEntry entry = msg.getContent();
+            entry.getContentMetadata().setCached(false);
+            this.dht.store(entry);
         }
         catch (IOException e)
         {
