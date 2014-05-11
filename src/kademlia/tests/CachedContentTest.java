@@ -77,7 +77,7 @@ public class CachedContentTest
                             {
                                 // Lets get the content from cached space     
                                 GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE, c.getOwnerId());
-                                System.out.println("Cached Content Found: " + new DHTContentImpl().fromBytes(kad1.getCachedContent(gp).getContentString().getBytes()));
+                                System.out.println("Cached Content Found: " + new DHTContentImpl().fromBytes(kad1.getCachedContent(gp).getContent().getBytes()));
                             }
                             catch (Exception e)
                             {

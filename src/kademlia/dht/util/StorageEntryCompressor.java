@@ -29,7 +29,7 @@ public class StorageEntryCompressor
      */
     public static StorageEntry compress(final StorageEntry entry) throws IOException
     {
-        entry.setContent(StringCompressor.compress(entry.getContentString()));
+        entry.setContent(StringCompressor.compress(entry.getContent()));
         
         return entry;
     }

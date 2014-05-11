@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -17,7 +18,7 @@ import java.util.zip.GZIPOutputStream;
 public class StringCompressor
 {
 
-    public static byte[] compress(final String input) throws IOException
+    public static String compress(final String input) throws IOException
     {
         try (ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 GZIPOutputStream gzipper = new GZIPOutputStream(bout))
@@ -25,13 +26,15 @@ public class StringCompressor
             gzipper.write(input.getBytes(), 0, input.length());
             gzipper.close();
 
-            return bout.toByteArray();
+            return Base64.getEncoder().encodeToString(bout.toByteArray());
         }
     }
 
-    public static byte[] decompress(final byte[] input) throws IOException
+    public static String decompress(final String input) throws IOException
     {
-        try (GZIPInputStream gzipper = new GZIPInputStream(new ByteArrayInputStream(input));
+        byte[] inputBytes = Base64.getDecoder().decode(input);
+
+        try (GZIPInputStream gzipper = new GZIPInputStream(new ByteArrayInputStream(inputBytes));
                 BufferedReader bf = new BufferedReader(new InputStreamReader(gzipper)))
         {
             StringBuilder data = new StringBuilder();
@@ -40,7 +43,7 @@ public class StringCompressor
             {
                 data.append(line);
             }
-            return data.toString().getBytes();
+            return data.toString();
         }
     }
 }
