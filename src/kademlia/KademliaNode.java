@@ -19,6 +19,7 @@ import kademlia.dht.DHT;
 import kademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
+import kademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UpToDateContentException;
@@ -309,7 +310,7 @@ public class KademliaNode
      */
     private int put(StorageEntry entry) throws IOException
     {
-        StoreOperation sop = new StoreOperation(this.server, this, entry, this.dht, this.config);
+        StoreOperation sop = new StoreOperation(this.server, this, this.compressStorageEntry(entry), this.dht, this.config);
         sop.execute();
 
         /* Return how many nodes the content was stored on */
@@ -342,7 +343,7 @@ public class KademliaNode
      */
     public void putLocally(KadContent content) throws IOException
     {
-        this.dht.store(new StorageEntry(content));
+        this.dht.store(this.compressStorageEntry(new StorageEntry(content)));
     }
 
     /**
@@ -356,12 +357,46 @@ public class KademliaNode
      */
     public void cache(KadContent content) throws IOException
     {
-        this.dht.cache(content);
+        this.cache(new StorageEntry(content));
     }
 
     private void cache(StorageEntry entry) throws IOException
     {
-        this.dht.cache(entry);
+        this.dht.cache(this.compressStorageEntry(entry));
+    }
+
+    /**
+     * Compress the storage entry
+     */
+    private StorageEntry compressStorageEntry(final StorageEntry entry)
+    {
+        try
+        {
+            return StorageEntryCompressor.compress(entry);
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error whiles compressing storage entry. Msg: " + ex.getMessage());
+        }
+
+        return entry;
+    }
+
+    /**
+     * Decompress a given storage entry
+     */
+    private StorageEntry decompressStorageEntry(final StorageEntry entry)
+    {
+        try
+        {
+            return StorageEntryCompressor.decompress(entry);
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error whiles decompressing storage entry. Msg: " + ex.getMessage());
+        }
+
+        return entry;
     }
 
     /**
@@ -375,7 +410,7 @@ public class KademliaNode
      */
     public StorageEntry getCachedContent(GetParameter param) throws NoSuchElementException, IOException
     {
-        return this.dht.get(param);
+        return this.decompressStorageEntry(this.dht.get(param));
     }
 
     /**
@@ -427,18 +462,18 @@ public class KademliaNode
                 try
                 {
                     /* Get and return an updated version of the content */
-                    return this.getUpdated(gpf);
+                    return this.decompressStorageEntry(this.getUpdated(gpf));
                 }
                 catch (UpToDateContentException ex)
                 {
                     /* well the version we have is the latest, lets just return that */
-                    return e;
+                    return this.decompressStorageEntry(e);
                 }
             }
             else
             {
                 /* If it's not cached, we just return it since our node is one of the K-Closest */
-                return e;
+                return this.decompressStorageEntry(e);
             }
         }
 
@@ -448,7 +483,7 @@ public class KademliaNode
         clo.execute();
         long endTime = System.nanoTime();
         this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
-        return clo.getContentFound();
+        return this.decompressStorageEntry(clo.getContentFound());
     }
 
     /**
@@ -499,7 +534,7 @@ public class KademliaNode
             /* Any exception here will be if we don't have the content... just ignore it */
         }
 
-        return latest;
+        return this.decompressStorageEntry(latest);
     }
 
     /**
