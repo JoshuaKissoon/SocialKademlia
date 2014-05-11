@@ -32,6 +32,11 @@ public class StorageEntry
     {
         this.content = data;
     }
+    
+    public void setContent(String data)
+    {
+        
+    }
 
     public String getContentString()
     {

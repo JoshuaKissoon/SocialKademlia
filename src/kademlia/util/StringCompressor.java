@@ -29,7 +29,7 @@ public class StringCompressor
         }
     }
 
-    public static String decompress(final byte[] input) throws IOException
+    public static byte[] decompress(final byte[] input) throws IOException
     {
         try (GZIPInputStream gzipper = new GZIPInputStream(new ByteArrayInputStream(input));
                 BufferedReader bf = new BufferedReader(new InputStreamReader(gzipper)))
@@ -40,7 +40,7 @@ public class StringCompressor
             {
                 data.append(line);
             }
-            return data.toString();
+            return data.toString().getBytes();
         }
     }
 }
