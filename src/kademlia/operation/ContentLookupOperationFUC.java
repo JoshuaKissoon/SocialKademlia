@@ -62,6 +62,8 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     /* Statistical information */
     private final RouteLengthChecker routeLengthChecker;
 
+    private final GetParameterFUC params;
+
     
     {
         messagesTransiting = new HashMap<>();
@@ -84,6 +86,8 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         this.localNode = localNode;
         this.config = config;
 
+        this.params = params;
+
         /**
          * We initialize a TreeMap to store nodes.
          * This map will be sorted by which nodes are closest to the lookupId
@@ -103,6 +107,15 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         {
             /* Set the local node as already asked */
             nodes.put(this.localNode.getNode(), ASKED);
+
+            /**
+             * Check if we are a connection to the required content's owner and if we have it's node in our routing table
+             */
+            if (this.localNode.getRoutingTable().containsConnection(this.params.getOwnerId()))
+            {
+                Node connNode = this.localNode.getRoutingTable().getConnectionNode(this.params.getOwnerId());
+                this.nodes.put(connNode, UNASKED);
+            }
 
             /**
              * We add all nodes here instead of the K-Closest because there may be the case that the K-Closest are offline
