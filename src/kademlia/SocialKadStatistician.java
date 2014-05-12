@@ -17,8 +17,9 @@ public interface SocialKadStatistician extends KadStatistician
      * @param time            The time the content lookup took in nanoseconds
      * @param routeLength     The length of the route it took to get the content
      * @param updateAvailable Whether an updated version of the content was available
+     * @param isContentFound  Whether the content was found or not
      */
-    public void addContentLookupFUC(long time, int routeLength, boolean updateAvailable);
+    public void addContentLookupFUC(long time, int routeLength, boolean updateAvailable, boolean isContentFound);
 
     /**
      * @return The total number of content lookups performed for updated content.

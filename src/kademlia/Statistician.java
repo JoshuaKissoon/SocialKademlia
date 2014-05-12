@@ -76,7 +76,7 @@ public class Statistician implements SocialKadStatistician
     }
 
     @Override
-    public void addContentLookup(long time, int routeLength)
+    public void addContentLookup(long time, int routeLength, boolean isSuccessful)
     {
         this.numContentLookups++;
         this.totalContentLookupTime += time;
@@ -84,9 +84,9 @@ public class Statistician implements SocialKadStatistician
     }
 
     @Override
-    public void addContentLookupFUC(long time, int routeLength, boolean updateAvailable)
+    public void addContentLookupFUC(long time, int routeLength, boolean updateAvailable, boolean isContentFound)
     {
-        this.addContentLookup(time, routeLength);
+        this.addContentLookup(time, routeLength, isContentFound);
         this.numContentLookupsFUC++;
 
         if (updateAvailable)

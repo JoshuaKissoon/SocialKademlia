@@ -482,7 +482,7 @@ public class KademliaNode
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
+        this.statistician.addContentLookup(endTime - startTime, clo.routeLength(), clo.isContentFound());
         return this.decompressStorageEntry(clo.getContentFound());
     }
 
@@ -525,7 +525,7 @@ public class KademliaNode
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength(), clo.newerContentExist());
+        this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength(), clo.newerContentExist(), clo.isContentFound());
 
         StorageEntry latest = clo.getContentFound();
 
