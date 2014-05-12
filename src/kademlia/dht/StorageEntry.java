@@ -19,7 +19,7 @@ public class StorageEntry
 
     public StorageEntry(KadContent content, StorageEntryMetadata metadata)
     {
-        this.content = new String(content.toBytes());
+        this.content = new String(content.toSerializedForm());
         this.metadata = metadata;
     }
 
