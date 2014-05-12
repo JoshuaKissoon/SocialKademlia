@@ -6,7 +6,7 @@ package kademlia;
  * These statistics are temporary and will be lost when Kad is shut down.
  *
  * @author Joshua Kissoon
- * @since 20140507 
+ * @since 20140507
  */
 public interface KadStatistician
 {
@@ -60,6 +60,11 @@ public interface KadStatistician
      * @return The total number of content lookups performed.
      */
     public int numContentLookups();
+
+    /**
+     * @return How many content lookups have failed.
+     */
+    public int numFailedContentLookups();
 
     /**
      * @return The total time spent on content lookups.
