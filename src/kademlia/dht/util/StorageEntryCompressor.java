@@ -29,8 +29,17 @@ public class StorageEntryCompressor
      */
     public static StorageEntry compress(final StorageEntry entry) throws IOException
     {
-        entry.setContent(StringCompressor.compress(entry.getContent()));
-        
+//        try
+//        {
+//            entry.setContent(StringCompressor.compress(entry.getContent()));
+//        }
+//        catch (IOException ex)
+//        {
+//            System.err.println("Error whiles decompressing entry.");
+//            System.err.println("Entry: " + entry);
+//            System.err.println("Error: " + ex.getMessage());
+//            throw new IOException(ex.getMessage());
+//        }
         return entry;
     }
 
@@ -47,8 +56,17 @@ public class StorageEntryCompressor
      */
     public static StorageEntry decompress(final StorageEntry entry) throws IOException
     {
-        entry.setContent(StringCompressor.decompress(entry.getContent()));
-
+//        try
+//        {
+//            entry.setContent(StringCompressor.decompress(entry.getContent()));
+//        }
+//        catch (IOException ex)
+//        {
+//            System.err.println("Error whiles decompressing entry.");
+//            System.err.println("Entry: " + entry);
+//            System.err.println("Error: " + ex.getMessage());
+//            throw new IOException(ex.getMessage());
+//        }
         return entry;
     }
 }

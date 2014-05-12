@@ -500,7 +500,12 @@ public class KademliaNode
     {
         StorageEntry e = this.get(gp);
         this.cache(e);
-        return e;
+        
+        /**
+         * We have to decompress it again before returning it because the cache method would've compressed it 
+         * @todo decide whether it's better to decompress twice or to copy the storageentry and use one copy for cache()
+         */
+        return this.decompressStorageEntry(e);
     }
 
     /**

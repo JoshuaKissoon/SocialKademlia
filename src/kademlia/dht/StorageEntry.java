@@ -37,4 +37,19 @@ public class StorageEntry
     {
         return this.metadata;
     }
+
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("[StorageEntry: ");
+
+        sb.append("[Content: ");
+        sb.append(this.getContent());
+        sb.append("]");
+
+        sb.append(this.getContentMetadata());
+
+        sb.append("]");
+
+        return sb.toString();
+    }
 }
