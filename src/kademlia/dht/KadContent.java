@@ -52,7 +52,7 @@ public interface KadContent
      *
      * @return The content in byte format
      */
-    public String toSerializedForm();
+    public byte[] toSerializedForm();
 
     /**
      * Given the Content in byte format, read it
@@ -61,5 +61,5 @@ public interface KadContent
      *
      * @return A new object from the given
      */
-    public KadContent fromSerializedForm(String data);
+    public KadContent fromSerializedForm(byte[] data);
 }
