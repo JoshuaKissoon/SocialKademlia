@@ -1,6 +1,7 @@
 package kademlia.routing;
 
 import java.util.List;
+import kademlia.node.Node;
 
 /**
  * Extensions on a RoutingTable to make it work for Social Kademlia.
@@ -17,27 +18,35 @@ public interface SocialKadRoutingTable extends KadRoutingTable
     /**
      * Adds a Connection to the routing table
      *
-     * @param c the new connection
+     * @param actorId The actor Id of this connection
+     * @param node    The node related to this connection
      */
-    public void insertConnection(Connection c);
+    public void insertConnection(String actorId, Node node);
 
     /**
      * Checks if this routing table contain a connection.
      *
-     * @param c The connection to check for
+     * @param actorId The id of the actor
      *
      * @return boolean
      */
-    public boolean containsConnection(Connection c);
+    public boolean containsConnection(String actorId);
 
     /**
      * Remove a connection from this routing table.
      *
-     * @param c The connection to remove
+     * @param actorId
      *
      * @return Boolean whether the removal was successful.
      */
-    public boolean removeConnection(Connection c);
+    public boolean removeConnection(String actorId);
+
+    /**
+     * @param actorId
+     *
+     * @return The node of a given connection
+     */
+    public Node getConnectionNode(String actorId);
 
     /**
      * @return An Iterable structure with all connections in this routing table

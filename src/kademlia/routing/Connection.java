@@ -9,26 +9,39 @@ import kademlia.node.Node;
  * @author Joshua Kissoon
  * @since 20140501
  */
-public class Connection implements Comparable<Connection>
+public class Connection
 {
 
-    private final Node n;
+    private Node n;
     private long lastSeen;
+    private final String actorId;
 
     /**
      * Create a contact object
      *
-     * @param n The node associated with this contact
+     * @param n       The node associated with this contact
+     * @param actorId
      */
-    public Connection(Node n)
+    public Connection(String actorId, Node n)
     {
         this.n = n;
+        this.actorId = actorId;
         this.lastSeen = System.currentTimeMillis() / 1000L;
     }
 
     public Node getNode()
     {
         return this.n;
+    }
+
+    public void setNode(Node n)
+    {
+        this.n = n;
+    }
+
+    public String getConnectionId()
+    {
+        return this.actorId;
     }
 
     /**
@@ -54,16 +67,4 @@ public class Connection implements Comparable<Connection>
     {
         return c.getNode().equals(this.getNode());
     }
-
-    @Override
-    public int compareTo(Connection o)
-    {
-        if (this.getNode().equals(o.getNode()))
-        {
-            return 0;
-        }
-
-        return (this.lastSeen() > o.lastSeen()) ? 1 : -1;
-    }
-
 }

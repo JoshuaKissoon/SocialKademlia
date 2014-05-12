@@ -1,7 +1,9 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
 
@@ -15,11 +17,11 @@ public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKad
 {
 
     /* Connections of the actor of this node in the DOSN */
-    private final List<Connection> connections;
+    private final HashMap<String, Connection> connections;
 
     
     {
-        connections = new ArrayList<>();
+        connections = new HashMap<>();
     }
 
     public SocialKadRoutingTableImpl(Node localNode, KadConfiguration config)
@@ -28,39 +30,53 @@ public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKad
     }
 
     @Override
-    public void insertConnection(Connection c)
+    public void insertConnection(String actorId, Node node)
     {
-        if (this.containsConnection(c))
+        if (this.containsConnection(actorId))
         {
-            int index = this.connections.indexOf(c);
-            this.connections.get(index).setSeenNow();
+            Connection c = this.connections.get(actorId);
+            c.setNode(node);
+            c.setSeenNow();
         }
         else
         {
-            this.connections.add(c);
+            this.connections.put(actorId, new Connection(actorId, node));
         }
     }
 
     @Override
-    public boolean containsConnection(Connection c)
+    public boolean containsConnection(String actorId)
     {
-        return this.connections.contains(c);
+        return this.connections.containsKey(actorId);
     }
 
     @Override
-    public boolean removeConnection(Connection c)
+    public boolean removeConnection(String actorId)
     {
-        if (this.containsConnection(c))
+        if (this.containsConnection(actorId))
         {
-            return this.connections.remove(c);
+            this.connections.remove(actorId);
+            return true;
         }
-
         return false;
     }
 
     @Override
     public List<Connection> getConnections()
     {
-        return this.connections;
+        return this.connections.isEmpty() ? new ArrayList<>() : new ArrayList<>(this.connections.values());
+    }
+
+    @Override
+    public Node getConnectionNode(String actorId)
+    {
+        if (this.containsConnection(actorId))
+        {
+            return this.connections.get(actorId).getNode();
+        }
+        else
+        {
+            throw new NoSuchElementException("This connection does not exist.");
+        }
     }
 }
