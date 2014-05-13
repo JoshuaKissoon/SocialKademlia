@@ -16,12 +16,12 @@ import kademlia.dht.StorageEntry;
  */
 public class ContentLookupReceiverFUC implements Receiver
 {
-
+    
     private final KadServer server;
     private final KademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
-
+    
     public ContentLookupReceiverFUC(KadServer server, KademliaNode localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
@@ -29,7 +29,7 @@ public class ContentLookupReceiverFUC implements Receiver
         this.dht = dht;
         this.config = config;
     }
-
+    
     @Override
     public void receive(Message incoming, int comm) throws IOException
     {
@@ -41,33 +41,37 @@ public class ContentLookupReceiverFUC implements Receiver
         {
             /* Return a ContentMessage with the required data if it's a newer version */
             StorageEntry se = this.dht.get(msg.getParameters());
-            Message cMsg;
 
-            if (se.getContentMetadata().getLastUpdatedTimestamp() > msg.getParameters().getLastUpdatedTimestamp())
+            /* Only if this node is one of the K-Closest or the owner, we return the content */
+            if (se.getContentMetadata().isKNode() || se.getContentMetadata().getOwnerId().equals(localNode.getOwnerId()))
             {
-                cMsg = new ContentMessage(localNode.getNode(), se);
+                Message cMsg;
+                
+                if (se.getContentMetadata().getLastUpdatedTimestamp() > msg.getParameters().getLastUpdatedTimestamp())
+                {
+                    cMsg = new ContentMessage(localNode.getNode(), se);
+                }
+                else
+                {
+                    /* We don't have a newer version, send an UpToDateContentMsg */
+                    cMsg = new UpToDateContentMessage(this.localNode.getNode());
+                }
+                server.reply(msg.getOrigin(), cMsg, comm);
+                return;
             }
-            else
-            {
-                /* We don't have a newer version, send an UpToDateContentMsg */
-                cMsg = new UpToDateContentMessage(this.localNode.getNode());
-            }
-            server.reply(msg.getOrigin(), cMsg, comm);
         }
-        else
-        {
-            /**
-             * Return a the K closest nodes to this content identifier
-             * We create a NodeLookupReceiver and let this receiver handle this operation
-             */
-            NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
-            new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
-        }
+
+        /**
+         * Return a the K closest nodes to this content identifier
+         * We create a NodeLookupReceiver and let this receiver handle this operation
+         */
+        NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
+        new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
     }
-
+    
     @Override
     public void timeout(int comm)
     {
-
+        
     }
 }

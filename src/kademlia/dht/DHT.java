@@ -24,13 +24,13 @@ import kademlia.util.serializer.KadSerializer;
  */
 public class DHT
 {
-
+    
     private transient StoredContentManager contentManager;
     private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
-
+    
     private final String ownerId;
-
+    
     public DHT(String ownerId, KadConfiguration config)
     {
         this.ownerId = ownerId;
@@ -67,7 +67,7 @@ public class DHT
         {
             serializer = new JsonSerializer<>();
         }
-
+        
         return serializer;
     }
 
@@ -91,7 +91,7 @@ public class DHT
 
             /* update the last republished time */
             current.updateLastRepublished();
-
+            
             if (current.getLastUpdatedTimestamp() >= content.getContentMetadata().getLastUpdatedTimestamp())
             {
                 /* We have the current content, no need to update it! */
@@ -102,7 +102,7 @@ public class DHT
                 }
                 return false;
             }
-
+            
             if (current.isCached())
             {
                 /* If the current version is a chached version, remember to cache it back if we need to do an update */
@@ -141,7 +141,7 @@ public class DHT
             return false;
         }
     }
-
+    
     public boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
@@ -161,7 +161,7 @@ public class DHT
         content.getContentMetadata().setCached();
         return this.store(content);
     }
-
+    
     public boolean cache(KadContent content) throws IOException
     {
         return this.cache(new StorageEntry(content));
@@ -173,7 +173,7 @@ public class DHT
     private void putContentToFile(StorageEntry content, StorageEntryMetadata entryMD) throws IOException
     {
         String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
-
+        
         try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + entryMD.hashCode() + ".kct");
                 DataOutputStream dout = new DataOutputStream(fout))
         {
@@ -294,20 +294,21 @@ public class DHT
     {
         this.remove(new StorageEntryMetadata(content));
     }
-
+    
     public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
-        /* If it's cached data, we don't remove it */
+        /* If it's cached data, we don't remove it, just set that we are no longer one of the k-closest */
         if (this.contentManager.get(entry).isCached())
         {
+            this.contentManager.get(entry).setKNode(false);
             return;
         }
-
+        
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
-
+        
         contentManager.remove(entry);
-
+        
         if (file.exists())
         {
             file.delete();
@@ -340,7 +341,7 @@ public class DHT
         {
             contentStorageFolder.mkdir();
         }
-
+        
         return contentStorageFolder.toString();
     }
 
@@ -380,7 +381,7 @@ public class DHT
             }
         }
     }
-
+    
     @Override
     public synchronized String toString()
     {

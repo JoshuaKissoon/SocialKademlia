@@ -19,7 +19,11 @@ public class StorageEntryMetadata
     private final int contentHash;
     private final long updatedTs;
 
+    /* Whether this is a cached copy of this content */
     private boolean isCached = false;
+
+    /* Whether this node is one of the DHT owner of the content */
+    private boolean isKNode = false;
 
     /* This value is the last time this content was last updated from the network */
     private long lastRepublished;
@@ -81,6 +85,29 @@ public class StorageEntryMetadata
     public boolean isCached()
     {
         return this.isCached;
+    }
+
+    /**
+     * Specify that this node is one of the k-closest to the content.
+     */
+    public void setKNode()
+    {
+        this.isKNode = true;
+    }
+
+    /**
+     * Specify that this content should be cached.
+     *
+     * @param cached
+     */
+    public void setKNode(boolean cached)
+    {
+        this.isKNode = cached;
+    }
+
+    public boolean isKNode()
+    {
+        return this.isKNode;
     }
 
     /**

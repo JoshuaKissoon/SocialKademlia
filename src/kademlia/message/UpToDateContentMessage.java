@@ -16,7 +16,7 @@ public class UpToDateContentMessage implements Message
 {
 
     private Node origin;
-    public static final byte CODE = 0x10;
+    public static final byte CODE = 0x22;
 
     public UpToDateContentMessage(Node origin)
     {

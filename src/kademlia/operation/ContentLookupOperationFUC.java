@@ -307,6 +307,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         else
         {
             /* @todo Something is wrong that we get messages of other types here, investigate it! */
+            System.err.println("Got a response message of type " + incoming.getClass() + " in ContentLookupOperationFUC. ");
         }
     }
 

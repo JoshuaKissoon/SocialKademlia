@@ -37,9 +37,16 @@ public class StoreContentReceiver implements Receiver
 
         try
         {
-            /* Store this Content into the DHT */
+            /**
+             * Store this Content into the DHT
+             *
+             * Specify that this content should not be cached
+             *
+             * Specify that this node is one of the k-closest to the content
+             */
             StorageEntry entry = msg.getContent();
             entry.getContentMetadata().setCached(false);
+            entry.getContentMetadata().setKNode();
             this.dht.store(entry);
         }
         catch (IOException e)

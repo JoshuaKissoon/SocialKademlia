@@ -16,7 +16,7 @@ import kademlia.util.serializer.JsonSerializer;
 public class ContentLookupMessageFUC implements Message
 {
 
-    public static final byte CODE = 0x09;
+    public static final byte CODE = 0x29;
 
     private Node origin;
     private GetParameterFUC params;
