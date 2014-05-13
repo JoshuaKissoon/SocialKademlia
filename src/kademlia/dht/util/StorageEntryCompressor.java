@@ -29,9 +29,15 @@ public class StorageEntryCompressor
      */
     public static StorageEntry compress(final StorageEntry entry) throws IOException
     {
+//        if (entry.isCompressed())
+//        {
+//            return entry;
+//        }
+//
 //        try
 //        {
 //            entry.setContent(StringCompressor.compress(entry.getContent()));
+//            entry.setCompressed();
 //        }
 //        catch (IOException ex)
 //        {
@@ -56,9 +62,14 @@ public class StorageEntryCompressor
      */
     public static StorageEntry decompress(final StorageEntry entry) throws IOException
     {
+//        if (!entry.isCompressed())
+//        {
+//            return entry;
+//        }
 //        try
 //        {
-//            entry.setContent(StringCompressor.decompress(entry.getContent()));
+//            entry.setContent(StringCompressor.decompress(entry.getContentString()));
+//            entry.setDecompressed();
 //        }
 //        catch (IOException ex)
 //        {

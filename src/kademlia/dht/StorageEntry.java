@@ -11,6 +11,12 @@ public class StorageEntry
 
     private String content;
     private final StorageEntryMetadata metadata;
+    private boolean isCompressed;       // Is this entry in compressed form
+
+    
+    {
+        this.isCompressed = false;
+    }
 
     public StorageEntry(final KadContent content)
     {
@@ -28,14 +34,39 @@ public class StorageEntry
         this.content = new String(data);
     }
 
+    public final void setContent(String data)
+    {
+        this.content = data;
+    }
+
     public final byte[] getContent()
     {
         return this.content.getBytes();
     }
 
+    public final String getContentString()
+    {
+        return this.content;
+    }
+
     public final StorageEntryMetadata getContentMetadata()
     {
         return this.metadata;
+    }
+
+    public boolean isCompressed()
+    {
+        return this.isCompressed;
+    }
+
+    public void setCompressed()
+    {
+        this.isCompressed = true;
+    }
+
+    public void setDecompressed()
+    {
+        this.isCompressed = false;
     }
 
     @Override
