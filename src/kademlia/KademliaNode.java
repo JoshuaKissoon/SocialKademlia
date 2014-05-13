@@ -520,6 +520,11 @@ public class KademliaNode
      */
     public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
+        /* We assume the owner always have the latest content, so no need to contact any other node for updated content */
+        if(param.getOwnerId().equals(this.getOwnerId()))
+        {
+            throw new UpToDateContentException("You are the owner of this content, no need to check other nodes!!!");
+        }
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
         long startTime = System.nanoTime();
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);

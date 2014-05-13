@@ -114,7 +114,12 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             if (this.localNode.getRoutingTable().containsConnection(this.params.getOwnerId()))
             {
                 Node connNode = this.localNode.getRoutingTable().getConnectionNode(this.params.getOwnerId());
-                this.nodes.put(connNode, UNASKED);
+                
+                /* We only contact the owner of the contact if this is not the owner */
+                if (!connNode.equals(this.localNode.getNode()))
+                {
+                    this.nodes.put(connNode, UNASKED);
+                }
             }
 
             /**
@@ -282,7 +287,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             this.newerContentExist = false;
             this.isContentFound = true;
         }
-        else if(incoming instanceof NodeReplyMessage)
+        else if (incoming instanceof NodeReplyMessage)
         {
             /* The reply received is a NodeReplyMessage with nodes closest to the content needed */
             NodeReplyMessage msg = (NodeReplyMessage) incoming;
@@ -307,7 +312,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
         else
         {
             /* @todo Something is wrong that we get messages of other types here, investigate it! */
-            System.err.println("Got a response message of type " + incoming.getClass() + " in ContentLookupOperationFUC. ");
+            System.err.println(this.localNode.getNode() + " Got a response message of type " + incoming.getClass() + " from " + ((ContentLookupMessageFUC) incoming).getOrigin() + " in ContentLookupOperationFUC. ");
         }
     }
 
