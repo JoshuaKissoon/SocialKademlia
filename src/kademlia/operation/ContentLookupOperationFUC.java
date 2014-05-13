@@ -282,7 +282,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             this.newerContentExist = false;
             this.isContentFound = true;
         }
-        else
+        else if(incoming instanceof NodeReplyMessage)
         {
             /* The reply received is a NodeReplyMessage with nodes closest to the content needed */
             NodeReplyMessage msg = (NodeReplyMessage) incoming;
@@ -303,6 +303,10 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             /* Add the received nodes to our nodes list to query */
             this.addNodes(msg.getNodes());
             this.askNodesorFinish();
+        }
+        else
+        {
+            /* @todo Something is wrong that we get messages of other types here, investigate it! */
         }
     }
 

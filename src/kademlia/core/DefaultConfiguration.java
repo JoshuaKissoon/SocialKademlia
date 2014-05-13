@@ -17,7 +17,7 @@ public class DefaultConfiguration implements KadConfiguration
     private final static int K = 5;
     private final static int RCSIZE = 3;
     private final static int STALE = 1;
-    private final static String LOCAL_FOLDER = "kademlia";
+    private final static String LOCAL_FOLDER = "SocialKademlia";
 
     private final static boolean IS_TESTING = true;
 

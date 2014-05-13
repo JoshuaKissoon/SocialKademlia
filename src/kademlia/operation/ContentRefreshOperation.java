@@ -96,23 +96,6 @@ public class ContentRefreshOperation implements Operation
                 /* It would be weird if the content is not found here */
                 System.err.println("ContentRefreshOperation: Removing content from local node, content not found... Message: " + cnfe.getMessage());
             }
-
-            /* If this is a cached content, lets check for an updated version and update local storage */
-            if (e.isCached())
-            {
-                ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, localNode, new GetParameterFUC(e), this.config);
-                clo.execute();
-                
-                try
-                {
-                    StorageEntry latest = clo.getContentFound();
-                    this.dht.update(latest);
-                }
-                catch (UpToDateContentException ex)
-                {
-                    /* Content is already up to date, don't do anything */
-                }
-            }
         }
 
     }
