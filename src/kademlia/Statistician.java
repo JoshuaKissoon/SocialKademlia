@@ -48,6 +48,11 @@ public class Statistician implements SocialKadStatistician
     @Override
     public long getTotalDataSent()
     {
+        if (this.totalDataSent == 0)
+        {
+            return 0L;
+        }
+
         return this.totalDataSent / 1000L;
     }
 
@@ -61,6 +66,10 @@ public class Statistician implements SocialKadStatistician
     @Override
     public long getTotalDataReceived()
     {
+        if (this.totalDataReceived == 0)
+        {
+            return 0L;
+        }
         return this.totalDataReceived / 1000L;
     }
 
@@ -144,6 +153,10 @@ public class Statistician implements SocialKadStatistician
     @Override
     public double averageContentLookupRouteLength()
     {
+        if (this.numContentLookups == 0)
+        {
+            return 0D;
+        }
         double avg = (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
         DecimalFormat df = new DecimalFormat("#.00");
         return new Double(df.format(avg));
