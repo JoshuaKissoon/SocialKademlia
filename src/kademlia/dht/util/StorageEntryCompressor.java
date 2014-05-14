@@ -29,23 +29,23 @@ public class StorageEntryCompressor
      */
     public static StorageEntry compress(final StorageEntry entry) throws IOException
     {
-//        if (entry.isCompressed())
-//        {
-//            return entry;
-//        }
-//
-//        try
-//        {
-//            entry.setContent(StringCompressor.compress(entry.getContent()));
-//            entry.setCompressed();
-//        }
-//        catch (IOException ex)
-//        {
-//            System.err.println("Error whiles decompressing entry.");
-//            System.err.println("Entry: " + entry);
-//            System.err.println("Error: " + ex.getMessage());
-//            throw new IOException(ex.getMessage());
-//        }
+        if (entry.isCompressed())
+        {
+            return entry;
+        }
+
+        try
+        {
+            entry.setContent(StringCompressor.compress(entry.getContent()));
+            entry.setCompressed();
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error whiles decompressing entry.");
+            System.err.println("Entry: " + entry);
+            System.err.println("Error: " + ex.getMessage());
+            throw new IOException(ex.getMessage());
+        }
         return entry;
     }
 
@@ -62,22 +62,22 @@ public class StorageEntryCompressor
      */
     public static StorageEntry decompress(final StorageEntry entry) throws IOException
     {
-//        if (!entry.isCompressed())
-//        {
-//            return entry;
-//        }
-//        try
-//        {
-//            entry.setContent(StringCompressor.decompress(entry.getContentString()));
-//            entry.setDecompressed();
-//        }
-//        catch (IOException ex)
-//        {
-//            System.err.println("Error whiles decompressing entry.");
-//            System.err.println("Entry: " + entry);
-//            System.err.println("Error: " + ex.getMessage());
-//            throw new IOException(ex.getMessage());
-//        }
+        if (!entry.isCompressed())
+        {
+            return entry;
+        }
+        try
+        {
+            entry.setContent(StringCompressor.decompress(entry.getContentString()));
+            entry.setDecompressed();
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Error whiles decompressing entry.");
+            System.err.println("Entry: " + entry);
+            System.err.println("Error: " + ex.getMessage());
+            throw new IOException(ex.getMessage());
+        }
         return entry;
     }
 }

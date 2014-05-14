@@ -109,28 +109,30 @@ public class DHT
                 }
                 return false;
             }
+            else
+            {
+                /* We got here means we don't have the current content, lets update it */
+                /* If the current version is a cached version, remember to cache it back if we need to do an update */
+                if (current.isCached())
+                {
+                    cached = true;
+                }
 
-            /* We got here means we don't have the current content, lets update it */
-            /* If the current version is a cached version, remember to cache it back if we need to do an update */
-            if (current.isCached())
-            {
-                cached = true;
-            }
+                /* If this is a k-node for the current version, remember to set that back after an update */
+                if (current.isKNode())
+                {
+                    isKNode = true;
+                }
 
-            /* If this is a k-node for the current version, remember to set that back after an update */
-            if (current.isKNode())
-            {
-                isKNode = true;
-            }
-
-            /* Since we don't have the latest version, lets delete it so the new version will be added below */
-            try
-            {
-                this.remove(content.getContentMetadata());
-            }
-            catch (ContentNotFoundException ex)
-            {
-                /* This won't ever happen at this point since we only get here if the content is found, lets ignore it  */
+                /* Since we don't have the latest version, lets delete it so the new version will be added below */
+                try
+                {
+                    this.remove(content.getContentMetadata());
+                }
+                catch (ContentNotFoundException ex)
+                {
+                    /* This won't ever happen at this point since we only get here if the content is found, lets ignore it  */
+                }
             }
         }
 
