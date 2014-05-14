@@ -451,12 +451,17 @@ public class KademliaNode
         {
             /* The content is on our DHT */
             StorageEntry e = this.dht.get(param);
-            if (e.getContentMetadata().isCached())
+            if (e.getContentMetadata().isKNode())
+            {
+                /* We're one of the k-nodes, lets just return the content */
+                return this.decompressStorageEntry(e);
+            }
+            else if (e.getContentMetadata().isCached())
             {
                 /**
                  * If it's cached, we check for an updated version
                  *
-                 * @note Here we don't log the statistic because the getUpdated will log for us
+                 * @note Here we don't log the statistic because the getUpdated() will log for us
                  */
                 GetParameterFUC gpf = new GetParameterFUC(e.getContentMetadata());
                 try
@@ -500,9 +505,10 @@ public class KademliaNode
     {
         StorageEntry e = this.get(gp);
         this.cache(e);
-        
+
         /**
-         * We have to decompress it again before returning it because the cache method would've compressed it 
+         * We have to decompress it again before returning it because the cache method would've compressed it
+         *
          * @todo decide whether it's better to decompress twice or to copy the storageentry and use one copy for cache()
          */
         return this.decompressStorageEntry(e);
@@ -521,7 +527,7 @@ public class KademliaNode
     public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
         /* We assume the owner always have the latest content, so no need to contact any other node for updated content */
-        if(param.getOwnerId().equals(this.getOwnerId()))
+        if (param.getOwnerId().equals(this.getOwnerId()))
         {
             throw new UpToDateContentException("You are the owner of this content, no need to check other nodes!!!");
         }
