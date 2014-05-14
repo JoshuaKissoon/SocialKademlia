@@ -24,13 +24,13 @@ import kademlia.util.serializer.KadSerializer;
  */
 public class DHT
 {
-    
+
     private transient StoredContentManager contentManager;
     private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
-    
+
     private final String ownerId;
-    
+
     public DHT(String ownerId, KadConfiguration config)
     {
         this.ownerId = ownerId;
@@ -67,7 +67,7 @@ public class DHT
         {
             serializer = new JsonSerializer<>();
         }
-        
+
         return serializer;
     }
 
@@ -83,6 +83,7 @@ public class DHT
     public boolean store(StorageEntry content) throws IOException
     {
         boolean cached = content.getContentMetadata().isCached();   // Should we cache this content
+        boolean isKNode = content.getContentMetadata().isKNode();   // Is this node one of the k-node
 
         /* Lets check if we have this content and it's the updated version */
         if (this.contentManager.contains(content.getContentMetadata()))
@@ -91,28 +92,40 @@ public class DHT
 
             /* update the last republished time */
             current.updateLastRepublished();
-            
+
+            /* We have the current content, no need to update it! */
             if (current.getLastUpdatedTimestamp() >= content.getContentMetadata().getLastUpdatedTimestamp())
             {
-                /* We have the current content, no need to update it! */
-                if (content.getContentMetadata().isCached() && !current.isCached())
+                /* Cache it if required */
+                if (cached)
                 {
-                    /* If they require us to cache this content, lets cache it */
                     current.setCached();
+                }
+
+                /* Set this is a K-Node if required */
+                if (isKNode)
+                {
+                    current.setKNode();
                 }
                 return false;
             }
-            
+
+            /* We got here means we don't have the current content, lets update it */
+            /* If the current version is a cached version, remember to cache it back if we need to do an update */
             if (current.isCached())
             {
-                /* If the current version is a chached version, remember to cache it back if we need to do an update */
                 cached = true;
             }
 
-            /* We have this content, but not the latest version, lets delete it so the new version will be added below */
+            /* If this is a k-node for the current version, remember to set that back after an update */
+            if (current.isKNode())
+            {
+                isKNode = true;
+            }
+
+            /* Since we don't have the latest version, lets delete it so the new version will be added below */
             try
             {
-                //System.out.println("Removing older content to update it");
                 this.remove(content.getContentMetadata());
             }
             catch (ContentNotFoundException ex)
@@ -125,10 +138,11 @@ public class DHT
         try
         {
             /* Store the content to a file and then keep track of this content in the entries manager */
-            StorageEntryMetadata entryMD = content.getContentMetadata();
-            entryMD.setCached(cached);
-            this.contentManager.put(entryMD);
-            this.putContentToFile(content, entryMD);
+            content.getContentMetadata().updateLastRepublished();
+            content.getContentMetadata().setCached(cached);
+            content.getContentMetadata().setKNode(isKNode);
+            this.contentManager.put(content.getContentMetadata());
+            this.putContentToFile(content, content.getContentMetadata());
             return true;
         }
         catch (ContentExistException e)
@@ -141,7 +155,7 @@ public class DHT
             return false;
         }
     }
-    
+
     public boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
@@ -149,6 +163,8 @@ public class DHT
 
     /**
      * Handle storing content locally to keep the content cached.
+     *
+     * We set that this content is a cached entry and that this node is not one of the k-nodes.
      *
      * @param content The DHT content to store
      *
@@ -159,9 +175,10 @@ public class DHT
     public boolean cache(StorageEntry content) throws IOException
     {
         content.getContentMetadata().setCached();
+        content.getContentMetadata().setKNode(false);
         return this.store(content);
     }
-    
+
     public boolean cache(KadContent content) throws IOException
     {
         return this.cache(new StorageEntry(content));
@@ -173,7 +190,7 @@ public class DHT
     private void putContentToFile(StorageEntry content, StorageEntryMetadata entryMD) throws IOException
     {
         String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
-        
+
         try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + entryMD.hashCode() + ".kct");
                 DataOutputStream dout = new DataOutputStream(fout))
         {
@@ -183,6 +200,10 @@ public class DHT
 
     /**
      * Update a content; the operation is only done iff we already have a copy of the content here
+     *
+     * @param newContent The content to update.
+     *
+     * @throws java.io.IOException
      */
     public void update(StorageEntry newContent) throws IOException
     {
@@ -294,7 +315,7 @@ public class DHT
     {
         this.remove(new StorageEntryMetadata(content));
     }
-    
+
     public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         /* If it's cached data, we don't remove it, just set that we are no longer one of the k-closest */
@@ -303,12 +324,12 @@ public class DHT
             this.contentManager.get(entry).setKNode(false);
             return;
         }
-        
+
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
-        
+
         contentManager.remove(entry);
-        
+
         if (file.exists())
         {
             file.delete();
@@ -341,7 +362,7 @@ public class DHT
         {
             contentStorageFolder.mkdir();
         }
-        
+
         return contentStorageFolder.toString();
     }
 
@@ -381,7 +402,7 @@ public class DHT
             }
         }
     }
-    
+
     @Override
     public synchronized String toString()
     {
