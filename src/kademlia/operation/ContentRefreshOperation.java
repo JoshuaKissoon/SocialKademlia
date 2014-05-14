@@ -60,6 +60,12 @@ public class ContentRefreshOperation implements Operation
                 continue;
             }
 
+            /* If this is a cached content and we're not one of the k-closest nodes nor the owner; this node is not responsible for republishing it */
+            if (e.isCached() && !e.isKNode() && !e.getOwnerId().equals(this.localNode.getOwnerId()))
+            {
+                continue;
+            }
+
             /* Set that this content is now republished */
             e.updateLastRepublished();
 
