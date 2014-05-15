@@ -30,7 +30,7 @@ public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKad
     }
 
     @Override
-    public void insertConnection(String actorId, Node node)
+    public synchronized void insertConnection(String actorId, Node node)
     {
         if (this.containsConnection(actorId))
         {
@@ -45,13 +45,13 @@ public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKad
     }
 
     @Override
-    public boolean containsConnection(String actorId)
+    public synchronized boolean containsConnection(String actorId)
     {
         return this.connections.containsKey(actorId);
     }
 
     @Override
-    public boolean removeConnection(String actorId)
+    public synchronized boolean removeConnection(String actorId)
     {
         if (this.containsConnection(actorId))
         {
@@ -62,13 +62,13 @@ public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKad
     }
 
     @Override
-    public List<Connection> getConnections()
+    public synchronized List<Connection> getConnections()
     {
         return this.connections.isEmpty() ? new ArrayList<>() : new ArrayList<>(this.connections.values());
     }
 
     @Override
-    public Node getConnectionNode(String actorId)
+    public synchronized Node getConnectionNode(String actorId)
     {
         if (this.containsConnection(actorId))
         {
