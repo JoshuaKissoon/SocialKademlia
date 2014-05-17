@@ -145,6 +145,10 @@ public class Statistician implements SocialKadStatistician
     @Override
     public double averageContentLookupTime()
     {
+        if (this.totalContentLookupTime == 0 || this.numContentLookups == 0)
+        {
+            return 0D;
+        }
         double avg = (double) ((double) this.totalContentLookupTime / (double) this.numContentLookups) / 1000000D;
         DecimalFormat df = new DecimalFormat("#.00");
         return new Double(df.format(avg));
