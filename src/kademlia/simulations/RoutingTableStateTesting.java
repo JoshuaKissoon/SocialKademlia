@@ -1,5 +1,7 @@
-package kademlia.tests;
+package kademlia.simulations;
 
+import kademlia.simulations.RoutingTableStateTesting;
+import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import java.util.Scanner;
 import kademlia.KademliaNode;

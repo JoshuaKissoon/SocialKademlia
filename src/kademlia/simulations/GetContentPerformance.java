@@ -1,10 +1,11 @@
-package kademlia.tests;
+package kademlia.simulations;
 
+import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import kademlia.KademliaNode;
-import kademlia.dht.GetParameterFUC;
+import kademlia.dht.GetParameter;
 import kademlia.dht.StorageEntry;
-import kademlia.exceptions.UpToDateContentException;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 
 /**
@@ -13,7 +14,7 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @since 20140507
  */
-public class GetUpdatedContentPerformance
+public class GetContentPerformance
 {
 
     public final static int NUM_RUNS = 1000;
@@ -24,7 +25,7 @@ public class GetUpdatedContentPerformance
 
     public long startTime, endTime, timeTaken;
 
-    public GetUpdatedContentPerformance()
+    public GetContentPerformance()
     {
         try
         {
@@ -54,42 +55,38 @@ public class GetUpdatedContentPerformance
                 data += originalData;
             }
 
-            c = new DHTContentImpl("Joshua", data);
+            c = new DHTContentImpl(new KademliaId("HRF456789SD584567463"), "Joshua");
+            c.setData(data);
 
-            kads[1].put(c);
+            kads[0].put(c);
         }
         catch (IOException ex)
         {
-
+            ex.printStackTrace();
         }
 
-        /* Lets do the get updated content operations */
-        GetParameterFUC gp = new GetParameterFUC(c);
+        /* Lets do the get operations */
+        GetParameter gp = new GetParameter(c);
         startTime = System.nanoTime();
         for (int i = 0; i < NUM_RUNS; i++)
         {
             try
             {
-                StorageEntry cc = kads[1].getUpdated(gp);
+                StorageEntry cc = kads[1].get(gp);
             }
-            catch (UpToDateContentException ex)
+            catch (ContentNotFoundException | IOException ex)
             {
 
-            }
-            catch (IOException ex)
-            {
-                ex.printStackTrace();
             }
         }
         endTime = System.nanoTime();
         timeTaken = (endTime - startTime) / 1000000L;  // milliseconds
-        System.out.println("GUC Operation time: " + timeTaken);
+        System.out.println("Get Operation time: " + timeTaken);
         System.out.println(kads[1].getStatistician());
-
     }
 
     public static void main(String[] args)
     {
-        new GetUpdatedContentPerformance();
+        new GetContentPerformance();
     }
 }

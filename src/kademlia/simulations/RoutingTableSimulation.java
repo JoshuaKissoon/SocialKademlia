@@ -1,5 +1,6 @@
-package kademlia.tests;
+package kademlia.simulations;
 
+import kademlia.simulations.RoutingTableSimulation;
 import kademlia.KademliaNode;
 import kademlia.node.KademliaId;
 import kademlia.routing.SocialKadRoutingTable;

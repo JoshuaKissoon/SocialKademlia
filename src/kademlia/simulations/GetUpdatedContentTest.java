@@ -1,5 +1,6 @@
-package kademlia.tests;
+package kademlia.simulations;
 
+import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import kademlia.KademliaNode;
 import kademlia.dht.GetParameterFUC;
