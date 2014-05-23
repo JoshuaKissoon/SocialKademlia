@@ -22,6 +22,7 @@ import socialkademlia.dht.StorageEntry;
 import socialkademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
+import kademlia.message.KademliaMessageFactory;
 import socialkademlia.exceptions.UpToDateContentException;
 import socialkademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -67,7 +68,7 @@ public class KademliaNode
     private transient TimerTask refreshOperationTTask;
 
     /* Factories */
-    private final transient MessageFactory messageFactory;
+    private final transient KademliaMessageFactory messageFactory;
 
     /* Statistics */
     private final transient SocialKadStatistician statistician;

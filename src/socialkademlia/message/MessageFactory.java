@@ -11,6 +11,7 @@ import kademlia.message.ConnectReceiver;
 import kademlia.message.ContentLookupMessage;
 import kademlia.message.ContentLookupReceiver;
 import kademlia.message.ContentMessage;
+import kademlia.message.KademliaMessageFactory;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeLookupReceiver;
@@ -27,7 +28,7 @@ import socialkademlia.dht.DHT;
  * @author Joshua Kissoon
  * @since 20140202
  */
-public class MessageFactory
+public class MessageFactory implements KademliaMessageFactory
 {
 
     private final KademliaNode localNode;
@@ -41,6 +42,7 @@ public class MessageFactory
         this.config = config;
     }
 
+    @Override
     public Message createMessage(byte code, DataInputStream in) throws IOException
     {
         switch (code)
@@ -72,6 +74,7 @@ public class MessageFactory
         }
     }
 
+    @Override
     public Receiver createReceiver(byte code, KadServer server)
     {
         switch (code)
