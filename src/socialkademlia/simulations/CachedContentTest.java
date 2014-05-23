@@ -4,7 +4,7 @@ import kademlia.simulations.DHTContentImpl;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.DefaultConfiguration;
-import socialkademlia.KademliaNode;
+import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.node.KademliaId;
@@ -24,11 +24,11 @@ public class CachedContentTest
         try
         {
             /* Setting up 2 Kad networks */
-            final KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF456789djem45674DH"), 12049);
-            final KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("AJDHR678947584567464"), 4585);
-            final KademliaNode kad3 = new KademliaNode("Shameer", new KademliaId("AS84k6789KRNS45KFJ8W"), 8104);
-            final KademliaNode kad4 = new KademliaNode("Lokesh.", new KademliaId("AS84kUD89YU58456dyrj"), 8335);
-            final KademliaNode kad5 = new KademliaNode("Chandu.", new KademliaId("AS84kUD894758456dyrj"), 13345);
+            final JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF456789djem45674DH"), 12049);
+            final JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("AJDHR678947584567464"), 4585);
+            final JKademliaNode kad3 = new JKademliaNode("Shameer", new KademliaId("AS84k6789KRNS45KFJ8W"), 8104);
+            final JKademliaNode kad4 = new JKademliaNode("Lokesh.", new KademliaId("AS84kUD89YU58456dyrj"), 8335);
+            final JKademliaNode kad5 = new JKademliaNode("Chandu.", new KademliaId("AS84kUD894758456dyrj"), 13345);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");

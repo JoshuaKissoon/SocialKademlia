@@ -49,7 +49,7 @@ import socialkademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
  * @todo Handle IPv6 Addresses
  *
  */
-public class KademliaNode
+public class JKademliaNode
 {
 
     /* Kademlia Attributes */
@@ -95,7 +95,7 @@ public class KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public KademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -122,7 +122,7 @@ public class KademliaNode
                 try
                 {
                     /* Runs a DHT RefreshOperation  */
-                    KademliaNode.this.refresh();
+                    JKademliaNode.this.refresh();
                 }
                 catch (IOException e)
                 {
@@ -141,7 +141,7 @@ public class KademliaNode
         this.refreshOperationTimer.purge();
     }
 
-    public KademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -153,7 +153,7 @@ public class KademliaNode
         );
     }
 
-    public KademliaNode(String ownerId, Node node, int udpPort, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node node, int udpPort, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -164,7 +164,7 @@ public class KademliaNode
         );
     }
 
-    public KademliaNode(String ownerId, KademliaId defaultId, int udpPort) throws IOException
+    public JKademliaNode(String ownerId, KademliaId defaultId, int udpPort) throws IOException
     {
         this(
                 ownerId,
@@ -184,9 +184,9 @@ public class KademliaNode
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public static KademliaNode loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
+    public static JKademliaNode loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        return KademliaNode.loadFromFile(ownerId, new DefaultConfiguration());
+        return JKademliaNode.loadFromFile(ownerId, new DefaultConfiguration());
     }
 
     /**
@@ -200,7 +200,7 @@ public class KademliaNode
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public static KademliaNode loadFromFile(String ownerId, KadConfiguration iconfig) throws FileNotFoundException, IOException, ClassNotFoundException
+    public static JKademliaNode loadFromFile(String ownerId, KadConfiguration iconfig) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         DataInputStream din;
 
@@ -208,7 +208,7 @@ public class KademliaNode
          * @section Read Basic Kad data
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "kad.kns"));
-        KademliaNode ikad = new JsonSerializer<KademliaNode>().read(din);
+        JKademliaNode ikad = new JsonSerializer<JKademliaNode>().read(din);
 
         /**
          * @section Read the routing table
@@ -229,7 +229,7 @@ public class KademliaNode
         DHT idht = new JsonDHTSerializer().read(din);
         idht.setConfiguration(iconfig);
 
-        return new KademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
+        return new JKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
     }
 
     /**
@@ -615,7 +615,7 @@ public class KademliaNode
          * @section Store Basic Kad data
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId, this.config) + File.separator + "kad.kns"));
-        new JsonSerializer<KademliaNode>().write(this, dout);
+        new JsonSerializer<JKademliaNode>().write(this, dout);
 
         /**
          * @section Save the node state

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import socialkademlia.KademliaNode;
+import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import socialkademlia.dht.GetParameterFUC;
@@ -44,7 +44,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
     private static final Byte FAILED = (byte) 0x03;
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final JKademliaNode localNode;
     private StorageEntry contentFound = null;
     private final KadConfiguration config;
 
@@ -78,7 +78,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
      * @param params    The parameters to search for the content which we need to find
      * @param config
      */
-    public ContentLookupOperationFUC(KadServer server, KademliaNode localNode, GetParameterFUC params, KadConfiguration config)
+    public ContentLookupOperationFUC(KadServer server, JKademliaNode localNode, GetParameterFUC params, KadConfiguration config)
     {
         /* Construct our lookup message */
         this.lookupMessage = new ContentLookupMessageFUC(localNode.getNode(), params);

@@ -2,7 +2,7 @@ package socialkademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
-import socialkademlia.KademliaNode;
+import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import socialkademlia.dht.DHT;
@@ -23,11 +23,11 @@ public class ContentRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final JKademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public ContentRefreshOperation(KadServer server, KademliaNode localNode, DHT dht, KadConfiguration config)
+    public ContentRefreshOperation(KadServer server, JKademliaNode localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

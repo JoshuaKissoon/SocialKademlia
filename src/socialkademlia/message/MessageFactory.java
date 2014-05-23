@@ -2,7 +2,7 @@ package socialkademlia.message;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import socialkademlia.KademliaNode;
+import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.message.AcknowledgeMessage;
@@ -31,11 +31,11 @@ import socialkademlia.dht.DHT;
 public class MessageFactory implements KademliaMessageFactory
 {
 
-    private final KademliaNode localNode;
+    private final JKademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public MessageFactory(KademliaNode local, DHT dht, KadConfiguration config)
+    public MessageFactory(JKademliaNode local, DHT dht, KadConfiguration config)
     {
         this.localNode = local;
         this.dht = dht;
