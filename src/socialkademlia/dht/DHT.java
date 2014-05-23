@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaDHT;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
@@ -23,8 +24,10 @@ import kademlia.util.serializer.KadSerializer;
  *
  * @author Joshua Kissoon
  * @since 20140226
+ * 
+ * @todo Inherit the kademlia.dht.DHT class to remove the excess methods that are replicated
  */
-public class DHT
+public class DHT implements KademliaDHT
 {
 
     private transient StoredContentManager contentManager;

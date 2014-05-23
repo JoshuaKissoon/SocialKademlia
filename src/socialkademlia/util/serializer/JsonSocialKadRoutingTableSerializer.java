@@ -9,7 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import kademlia.routing.RoutingTable;
+import kademlia.routing.JKademliaRoutingTable;
 import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.KadConfiguration;
@@ -19,13 +19,13 @@ import socialkademlia.routing.SocialKadRoutingTable;
 
 /**
  * A KadSerializer that serializes routing tables to JSON format
- * The generic serializer is not working for routing tables
- *
- * Why a RoutingTable specific serializer?
- * The routing table structure:
- * - RoutingTable
- * -- Buckets[]
- * --- Map<NodeId, Node>
+ The generic serializer is not working for routing tables
+
+ Why a JKademliaRoutingTable specific serializer?
+ The routing table structure:
+ - JKademliaRoutingTable
+ -- Buckets[]
+ --- Map<NodeId, Node>
  * ---- NodeId:KeyBytes
  * ---- Node: NodeId, InetAddress, Port
  *
@@ -33,9 +33,9 @@ import socialkademlia.routing.SocialKadRoutingTable;
  * especially at the Map part.
  *
  * Solution
- * - Make the Buckets[] transient
- * - Simply store all Nodes in the serialized object
- * - When reloading, re-add all nodes to the RoutingTable
+ - Make the Buckets[] transient
+ - Simply store all Nodes in the serialized object
+ - When reloading, re-add all nodes to the JKademliaRoutingTable
  *
  * @author Joshua Kissoon
  *
@@ -74,8 +74,8 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
         {
             writer.beginArray();
 
-            /* Write the basic RoutingTable */
-            gson.toJson(data, RoutingTable.class, writer);
+            /* Write the basic JKademliaRoutingTable */
+            gson.toJson(data, JKademliaRoutingTable.class, writer);
 
             /* Now Store the Contacts  */
             gson.toJson(data.getAllContacts(), contactCollectionType, writer);
@@ -92,11 +92,11 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
         {
             reader.beginArray();
 
-            /* Read the basic RoutingTable */
-            SocialKadRoutingTable tbl = gson.fromJson(reader, RoutingTable.class);
+            /* Read the basic JKademliaRoutingTable */
+            SocialKadRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
             tbl.setConfiguration(config);
 
-            /* Now get the Contacts and add them back to the RoutingTable */
+            /* Now get the Contacts and add them back to the JKademliaRoutingTable */
             List<Contact> contacts = gson.fromJson(reader, contactCollectionType);
             tbl.initialize();
 

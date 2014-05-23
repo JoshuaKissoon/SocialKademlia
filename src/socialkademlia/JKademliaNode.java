@@ -15,6 +15,7 @@ import kademlia.DefaultConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
+import kademlia.KademliaNode;
 import socialkademlia.dht.DHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
@@ -33,6 +34,8 @@ import socialkademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
+import kademlia.routing.JKademliaRoutingTable;
+import kademlia.routing.KademliaRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
 import kademlia.util.serializer.JsonDHTSerializer;
@@ -49,7 +52,7 @@ import socialkademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
  * @todo Handle IPv6 Addresses
  *
  */
-public class JKademliaNode
+public class JKademliaNode implements KademliaNode
 {
 
     /* Kademlia Attributes */
@@ -111,6 +114,7 @@ public class JKademliaNode
     /**
      * Schedule the recurring refresh operation
      */
+    @Override
     public final void startRefreshOperation()
     {
         this.refreshOperationTimer = new Timer(true);
@@ -133,6 +137,7 @@ public class JKademliaNode
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
     }
 
+    @Override
     public final void stopRefreshOperation()
     {
         /* Close off the timer tasks */
@@ -656,17 +661,13 @@ public class JKademliaNode
         return nodeStateFolder.toString();
     }
 
-    /**
-     * @return The routing table for this node.
-     */
+    @Override
     public SocialKadRoutingTable getRoutingTable()
     {
         return this.routingTable;
     }
 
-    /**
-     * @return The statistician that manages all statistics
-     */
+    @Override
     public SocialKadStatistician getStatistician()
     {
         return this.statistician;
@@ -702,5 +703,23 @@ public class JKademliaNode
         sb.append("\n\n\n");
 
         return sb.toString();
+    }
+
+    @Override
+    public kademlia.dht.DHT getDHT()
+    {
+
+    }
+
+    @Override
+    public int put(kademlia.dht.StorageEntry entry) throws IOException
+    {
+
+    }
+
+    @Override
+    public kademlia.dht.StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    {
+
     }
 }

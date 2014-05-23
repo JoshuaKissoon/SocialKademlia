@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.node.Node;
-import kademlia.routing.RoutingTable;
+import kademlia.routing.JKademliaRoutingTable;
 
 /**
  * Implementation of SocialKadRoutingTable
@@ -14,7 +14,7 @@ import kademlia.routing.RoutingTable;
  * @author Joshua Kissoon
  * @since 20140501
  */
-public class SocialKadRoutingTableImpl extends RoutingTable implements SocialKadRoutingTable
+public class SocialKadRoutingTableImpl extends JKademliaRoutingTable implements SocialKadRoutingTable
 {
 
     /* Connections of the actor of this node in the DOSN */

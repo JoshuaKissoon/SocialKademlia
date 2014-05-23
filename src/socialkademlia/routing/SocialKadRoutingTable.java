@@ -2,7 +2,7 @@ package socialkademlia.routing;
 
 import java.util.List;
 import kademlia.node.Node;
-import kademlia.routing.KadRoutingTable;
+import kademlia.routing.KademliaRoutingTable;
 
 /**
  * Extensions on a RoutingTable to make it work for Social Kademlia.
@@ -13,7 +13,7 @@ import kademlia.routing.KadRoutingTable;
  * @author Joshua Kissoon
  * @created 20140501
  */
-public interface SocialKadRoutingTable extends KadRoutingTable
+public interface SocialKadRoutingTable extends KademliaRoutingTable
 {
 
     /**
