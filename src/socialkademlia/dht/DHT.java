@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import kademlia.core.KadConfiguration;
+import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.dht.KadContent;
 import kademlia.exceptions.ContentExistException;

@@ -2,7 +2,7 @@ package socialkademlia.message;
 
 import java.io.IOException;
 import socialkademlia.KademliaNode;
-import kademlia.core.KadServer;
+import kademlia.KadServer;
 import kademlia.message.Message;
 import kademlia.message.Receiver;
 import kademlia.message.StoreContentMessage;
