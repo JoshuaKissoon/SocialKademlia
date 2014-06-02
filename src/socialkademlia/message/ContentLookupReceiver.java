@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.KademliaNode;
 import kademlia.message.ContentLookupMessage;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
-import kademlia.message.NodeLookupReceiver;
 import kademlia.message.Receiver;
+import socialkademlia.SocialKademliaNode;
 import socialkademlia.dht.SocialKademliaDHT;
 
 /**
@@ -23,11 +22,11 @@ public class ContentLookupReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final SocialKademliaNode localNode;
     private final SocialKademliaDHT dht;
     private final KadConfiguration config;
 
-    public ContentLookupReceiver(KadServer server, KademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
+    public ContentLookupReceiver(KadServer server, SocialKademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

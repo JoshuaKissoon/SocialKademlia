@@ -2,9 +2,9 @@ package socialkademlia.message;
 
 import java.io.IOException;
 import kademlia.KadServer;
-import kademlia.KademliaNode;
 import kademlia.message.Message;
 import kademlia.message.Receiver;
+import socialkademlia.SocialKademliaNode;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntry;
 
@@ -18,10 +18,10 @@ public class StoreContentReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final SocialKademliaNode localNode;
     private final SocialKademliaDHT dht;
 
-    public StoreContentReceiver(KadServer server, KademliaNode localNode, SocialKademliaDHT dht)
+    public StoreContentReceiver(KadServer server, SocialKademliaNode localNode, SocialKademliaDHT dht)
     {
         this.server = server;
         this.localNode = localNode;
