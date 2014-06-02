@@ -18,7 +18,6 @@ import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
 import socialkademlia.exceptions.UpToDateContentException;
 import socialkademlia.message.ContentLookupMessageFUC;
-import kademlia.message.ContentMessage;
 import kademlia.message.Message;
 import kademlia.message.NodeReplyMessage;
 import socialkademlia.message.UpToDateContentMessage;
@@ -27,6 +26,7 @@ import kademlia.node.Node;
 import kademlia.operation.Operation;
 import kademlia.util.RouteLengthChecker;
 import socialkademlia.dht.SocialKademliaStorageEntry;
+import socialkademlia.message.SocialKademliaContentMessage;
 
 /**
  * Looks up a specified identifier and returns the value associated with it
@@ -265,10 +265,10 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             return;
         }
 
-        if (incoming instanceof ContentMessage)
+        if (incoming instanceof SocialKademliaContentMessage)
         {
             /* The reply received is a content message with the required content, take it in */
-            ContentMessage msg = (ContentMessage) incoming;
+            SocialKademliaContentMessage msg = (SocialKademliaContentMessage) incoming;
 
             /* Add the origin node to our routing table */
             this.localNode.getRoutingTable().insert(msg.getOrigin());
