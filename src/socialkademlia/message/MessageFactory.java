@@ -9,7 +9,6 @@ import kademlia.message.AcknowledgeMessage;
 import kademlia.message.ConnectMessage;
 import kademlia.message.ConnectReceiver;
 import kademlia.message.ContentLookupMessage;
-import kademlia.message.ContentLookupReceiver;
 import kademlia.message.ContentMessage;
 import kademlia.message.KademliaMessageFactory;
 import kademlia.message.Message;

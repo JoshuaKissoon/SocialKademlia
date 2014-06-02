@@ -7,8 +7,6 @@ import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.dht.KadContent;
-import kademlia.dht.KademliaStorageEntry;
-import kademlia.dht.KademliaStorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 import kademlia.util.serializer.KadSerializer;
@@ -65,7 +63,7 @@ public interface SocialKademliaDHT
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public KademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
+    public SocialKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
 
     /**
      * Check if any content for the given criteria exists in this DHT
@@ -85,7 +83,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public KademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
+    public SocialKademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
 
     /**
      * Get the StorageEntry for the content if any exist.
@@ -96,7 +94,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
+    public SocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
 
     /**
      * Delete a content from local storage
