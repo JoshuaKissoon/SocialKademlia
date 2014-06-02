@@ -27,7 +27,7 @@ import kademlia.util.serializer.KadSerializer;
  * 
  * @todo Inherit the kademlia.dht.DHT class to remove the excess methods that are replicated
  */
-public class DHT implements KademliaDHT
+public class DHT implements SocialKademliaDHT
 {
 
     private transient StoredContentManager contentManager;

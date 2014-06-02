@@ -19,6 +19,7 @@ import kademlia.KademliaNode;
 import socialkademlia.dht.DHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaDHT;
 import socialkademlia.dht.StorageEntry;
 import socialkademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
@@ -34,13 +35,13 @@ import socialkademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
-import kademlia.routing.JKademliaRoutingTable;
-import kademlia.routing.KademliaRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
 import kademlia.util.serializer.JsonDHTSerializer;
 import kademlia.util.serializer.JsonSerializer;
+import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
+import socialkademlia.util.serializer.JsonSocialKademliaDHTSerializer;
 
 /**
  * The main Kademlia Node on the network, this node manages everything for this local system.
@@ -61,7 +62,7 @@ public class JKademliaNode implements KademliaNode
     /* Objects to be used */
     private final transient Node localNode;
     private final transient KadServer server;
-    private final transient DHT dht;
+    private final transient SocialKademliaDHT dht;
     private transient SocialKadRoutingTable routingTable;
     private final int udpPort;
     private transient KadConfiguration config;
@@ -98,7 +99,7 @@ public class JKademliaNode implements KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public JKademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node localNode, int udpPort, SocialKademliaDHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -231,7 +232,7 @@ public class JKademliaNode implements KademliaNode
          * @section Read the DHT
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "dht.kns"));
-        DHT idht = new JsonDHTSerializer().read(din);
+        SocialKademliaDHT idht = new JsonSocialKademliaDHTSerializer().read(din);
         idht.setConfiguration(iconfig);
 
         return new JKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
@@ -240,6 +241,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return Node The local node for this system
      */
+    @Override
     public Node getNode()
     {
         return this.localNode;
@@ -248,6 +250,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return The KadServer used to send/receive messages
      */
+    @Override
     public KadServer getServer()
     {
         return this.server;
@@ -256,7 +259,8 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return The DHT for this kad instance
      */
-    public DHT getDHT()
+    @Override
+    public SocialKademliaDHT getDHT()
     {
         return this.dht;
     }
@@ -264,6 +268,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return The current KadConfiguration object being used
      */
+    @Override
     public KadConfiguration getCurrentConfiguration()
     {
         return this.config;

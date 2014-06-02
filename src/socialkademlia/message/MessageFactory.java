@@ -20,7 +20,7 @@ import kademlia.message.Receiver;
 import kademlia.message.SimpleMessage;
 import kademlia.message.SimpleReceiver;
 import kademlia.message.StoreContentMessage;
-import socialkademlia.dht.DHT;
+import socialkademlia.dht.SocialKademliaDHT;
 
 /**
  * Handles creating messages and receivers
@@ -32,10 +32,10 @@ public class MessageFactory implements KademliaMessageFactory
 {
 
     private final JKademliaNode localNode;
-    private final DHT dht;
+    private final SocialKademliaDHT dht;
     private final KadConfiguration config;
 
-    public MessageFactory(JKademliaNode local, DHT dht, KadConfiguration config)
+    public MessageFactory(JKademliaNode local, SocialKademliaDHT dht, KadConfiguration config)
     {
         this.localNode = local;
         this.dht = dht;
