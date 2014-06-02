@@ -19,6 +19,7 @@ import kademlia.KademliaNode;
 import socialkademlia.dht.DHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaStorageEntry;
 import socialkademlia.dht.JSocialKademliaStorageEntry;
 import socialkademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
@@ -320,7 +321,7 @@ public class JKademliaNode implements KademliaNode
      * @throws java.io.IOException
      *
      */
-    private int put(SocialKademliaStorageEntry entry) throws IOException
+    public int put(SocialKademliaStorageEntry entry) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, this.compressStorageEntry(entry), this.dht, this.config);
         sop.execute();
@@ -716,5 +717,11 @@ public class JKademliaNode implements KademliaNode
         sb.append("\n\n\n");
 
         return sb.toString();
+    }
+
+    @Override
+    public int put(KademliaStorageEntry entry) throws IOException
+    {
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 }
