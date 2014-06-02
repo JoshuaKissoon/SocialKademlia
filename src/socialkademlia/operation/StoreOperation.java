@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.KademliaNode;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
 import kademlia.operation.NodeLookupOperation;
 import kademlia.operation.Operation;
+import socialkademlia.SocialKademliaNode;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntry;
 
@@ -23,7 +23,7 @@ public class StoreOperation implements Operation
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final SocialKademliaNode localNode;
     private final SocialKademliaStorageEntry storageEntry;
     private final SocialKademliaDHT localDht;
     private final KadConfiguration config;
@@ -35,7 +35,7 @@ public class StoreOperation implements Operation
      * @param localDht     The local DHT
      * @param config
      */
-    public StoreOperation(KadServer server, KademliaNode localNode, SocialKademliaStorageEntry storageEntry, SocialKademliaDHT localDht, KadConfiguration config)
+    public StoreOperation(KadServer server, SocialKademliaNode localNode, SocialKademliaStorageEntry storageEntry, SocialKademliaDHT localDht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
