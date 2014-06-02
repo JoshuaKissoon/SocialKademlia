@@ -33,7 +33,7 @@ import kademlia.operation.ConnectOperation;
 import socialkademlia.operation.ContentLookupOperation;
 import socialkademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
-import kademlia.operation.KadRefreshOperation;
+import socialkademlia.operation.KadRefreshOperation;
 import socialkademlia.operation.StoreOperation;
 import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
@@ -53,7 +53,7 @@ import socialkademlia.util.serializer.JsonSocialKademliaDHTSerializer;
  * @todo Handle IPv6 Addresses
  *
  */
-public class JKademliaNode implements KademliaNode
+public class JSocialKademliaNode implements SocialKademliaNode
 {
 
     /* Kademlia Attributes */
@@ -99,7 +99,7 @@ public class JKademliaNode implements KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public JKademliaNode(String ownerId, Node localNode, int udpPort, SocialKademliaDHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JSocialKademliaNode(String ownerId, Node localNode, int udpPort, SocialKademliaDHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -127,7 +127,7 @@ public class JKademliaNode implements KademliaNode
                 try
                 {
                     /* Runs a JSocialKademliaDHT RefreshOperation  */
-                    JKademliaNode.this.refresh();
+                    JSocialKademliaNode.this.refresh();
                 }
                 catch (IOException e)
                 {
@@ -147,7 +147,7 @@ public class JKademliaNode implements KademliaNode
         this.refreshOperationTimer.purge();
     }
 
-    public JKademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JSocialKademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -159,7 +159,7 @@ public class JKademliaNode implements KademliaNode
         );
     }
 
-    public JKademliaNode(String ownerId, Node node, int udpPort, KadConfiguration config) throws IOException
+    public JSocialKademliaNode(String ownerId, Node node, int udpPort, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -170,7 +170,7 @@ public class JKademliaNode implements KademliaNode
         );
     }
 
-    public JKademliaNode(String ownerId, KademliaId defaultId, int udpPort) throws IOException
+    public JSocialKademliaNode(String ownerId, KademliaId defaultId, int udpPort) throws IOException
     {
         this(
                 ownerId,
@@ -190,9 +190,9 @@ public class JKademliaNode implements KademliaNode
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public static JKademliaNode loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
+    public static JSocialKademliaNode loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        return JKademliaNode.loadFromFile(ownerId, new DefaultConfiguration());
+        return JSocialKademliaNode.loadFromFile(ownerId, new DefaultConfiguration());
     }
 
     /**
@@ -206,7 +206,7 @@ public class JKademliaNode implements KademliaNode
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public static JKademliaNode loadFromFile(String ownerId, KadConfiguration iconfig) throws FileNotFoundException, IOException, ClassNotFoundException
+    public static JSocialKademliaNode loadFromFile(String ownerId, KadConfiguration iconfig) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         DataInputStream din;
 
@@ -214,7 +214,7 @@ public class JKademliaNode implements KademliaNode
          * @section Read Basic Kad data
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "kad.kns"));
-        JKademliaNode ikad = new JsonSerializer<JKademliaNode>().read(din);
+        JSocialKademliaNode ikad = new JsonSerializer<JSocialKademliaNode>().read(din);
 
         /**
          * @section Read the routing table
@@ -235,7 +235,7 @@ public class JKademliaNode implements KademliaNode
         SocialKademliaDHT idht = new JsonSocialKademliaDHTSerializer().read(din);
         idht.setConfiguration(iconfig);
 
-        return new JKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
+        return new JSocialKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
     }
 
     /**
@@ -634,7 +634,7 @@ public class JKademliaNode implements KademliaNode
          * @section Store Basic Kad data
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId, this.config) + File.separator + "kad.kns"));
-        new JsonSerializer<JKademliaNode>().write(this, dout);
+        new JsonSerializer<JSocialKademliaNode>().write(this, dout);
 
         /**
          * @section Save the node state

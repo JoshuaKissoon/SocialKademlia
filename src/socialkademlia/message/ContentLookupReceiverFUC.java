@@ -1,7 +1,7 @@
 package socialkademlia.message;
 
 import java.io.IOException;
-import socialkademlia.JKademliaNode;
+import socialkademlia.JSocialKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.message.ContentMessage;
@@ -23,11 +23,11 @@ public class ContentLookupReceiverFUC implements Receiver
 {
     
     private final KadServer server;
-    private final JKademliaNode localNode;
+    private final JSocialKademliaNode localNode;
     private final SocialKademliaDHT dht;
     private final KadConfiguration config;
     
-    public ContentLookupReceiverFUC(KadServer server, JKademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
+    public ContentLookupReceiverFUC(KadServer server, JSocialKademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

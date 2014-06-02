@@ -1,7 +1,7 @@
 package socialkademlia.simulations;
 
 import java.io.IOException;
-import socialkademlia.JKademliaNode;
+import socialkademlia.JSocialKademliaNode;
 import socialkademlia.dht.GetParameterFUC;
 import socialkademlia.exceptions.UpToDateContentException;
 import kademlia.node.KademliaId;
@@ -23,8 +23,8 @@ public class GetUpdatedContentTest
         try
         {
             /* Setting up 2 Kad networks */
-            JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF45678947584567467"), 7574);
-            JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("ASERTKJDHGVHERJHGFLK"), 7572);
+            JSocialKademliaNode kad1 = new JSocialKademliaNode("JoshuaK", new KademliaId("ASF45678947584567467"), 7574);
+            JSocialKademliaNode kad2 = new JSocialKademliaNode("Crystal", new KademliaId("ASERTKJDHGVHERJHGFLK"), 7572);
 
             /* Create 2 content */
             DHTContentImpl c1 = new DHTContentImpl(kad2.getOwnerId(), "Joshua Book 1st Edition.");

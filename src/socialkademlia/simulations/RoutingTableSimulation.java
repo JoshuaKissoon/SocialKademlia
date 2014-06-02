@@ -1,7 +1,7 @@
 package socialkademlia.simulations;
 
 import socialkademlia.simulations.RoutingTableSimulation;
-import socialkademlia.JKademliaNode;
+import socialkademlia.JSocialKademliaNode;
 import kademlia.node.KademliaId;
 import socialkademlia.routing.SocialKadRoutingTable;
 
@@ -19,11 +19,11 @@ public class RoutingTableSimulation
         try
         {
             /* Setting up 2 Kad networks */
-            JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF45678947584567463"), 12049);
-            JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("ASF45678947584567464"), 4585);
-            JKademliaNode kad3 = new JKademliaNode("Shameer", new KademliaId("ASF45678947584567465"), 8104);
-            JKademliaNode kad4 = new JKademliaNode("Lokesh", new KademliaId("ASF45678947584567466"), 8335);
-            JKademliaNode kad5 = new JKademliaNode("Chandu", new KademliaId("ASF45678947584567467"), 13345);
+            JSocialKademliaNode kad1 = new JSocialKademliaNode("JoshuaK", new KademliaId("ASF45678947584567463"), 12049);
+            JSocialKademliaNode kad2 = new JSocialKademliaNode("Crystal", new KademliaId("ASF45678947584567464"), 4585);
+            JSocialKademliaNode kad3 = new JSocialKademliaNode("Shameer", new KademliaId("ASF45678947584567465"), 8104);
+            JSocialKademliaNode kad4 = new JSocialKademliaNode("Lokesh", new KademliaId("ASF45678947584567466"), 8335);
+            JSocialKademliaNode kad5 = new JSocialKademliaNode("Chandu", new KademliaId("ASF45678947584567467"), 13345);
 
             SocialKadRoutingTable rt = kad1.getRoutingTable();
             

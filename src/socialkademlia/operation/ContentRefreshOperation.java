@@ -2,16 +2,15 @@ package socialkademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
-import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import socialkademlia.dht.JSocialKademliaDHT;
-import socialkademlia.dht.JSocialKademliaStorageEntryMetadata;
+import kademlia.KademliaNode;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
 import kademlia.operation.Operation;
+import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntryMetadata;
 
 /**
@@ -24,11 +23,11 @@ public class ContentRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final JKademliaNode localNode;
-    private final JSocialKademliaDHT dht;
+    private final KademliaNode localNode;
+    private final SocialKademliaDHT dht;
     private final KadConfiguration config;
 
-    public ContentRefreshOperation(KadServer server, JKademliaNode localNode, JSocialKademliaDHT dht, KadConfiguration config)
+    public ContentRefreshOperation(KadServer server, KademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
