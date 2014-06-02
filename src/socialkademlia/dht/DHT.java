@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.dht.KadContent;
-import kademlia.dht.KademliaDHT;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
@@ -46,6 +45,7 @@ public class DHT implements SocialKademliaDHT
     /**
      * Initialize this DHT to it's default state
      */
+    @Override
     public final void initialize()
     {
         contentManager = new StoredContentManager();
@@ -56,6 +56,7 @@ public class DHT implements SocialKademliaDHT
      *
      * @param con The new configuration file
      */
+    @Override
     public void setConfiguration(KadConfiguration con)
     {
         this.config = con;
@@ -93,7 +94,7 @@ public class DHT implements SocialKademliaDHT
         /* Lets check if we have this content and it's the updated version */
         if (this.contentManager.contains(content.getContentMetadata()))
         {
-            StorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
+            SocialKademliaStorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
 
             /* update the last republished time */
             current.updateLastRepublished();
@@ -194,7 +195,7 @@ public class DHT implements SocialKademliaDHT
     /**
      * Write the given storage entry to it's file
      */
-    private void putContentToFile(StorageEntry content, StorageEntryMetadata entryMD) throws IOException
+    private void putContentToFile(StorageEntry content, SocialKademliaStorageEntryMetadata entryMD) throws IOException
     {
         String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
 
@@ -260,7 +261,7 @@ public class DHT implements SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public StorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -289,12 +290,13 @@ public class DHT implements SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
+    @Override
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
         {
-            StorageEntryMetadata e = this.contentManager.get(param);
+            SocialKademliaStorageEntryMetadata e = this.contentManager.get(param);
             return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
@@ -320,10 +322,10 @@ public class DHT implements SocialKademliaDHT
      */
     public void remove(KadContent content) throws ContentNotFoundException
     {
-        this.remove(new StorageEntryMetadata(content));
+        this.remove(new JSocialKademliaStorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public void remove(SocialKademliaStorageEntryMetadata entry) throws ContentNotFoundException
     {
         /* If it's cached data, we don't remove it, just set that we are no longer one of the k-closest */
         if (this.contentManager.get(entry).isCached())
@@ -376,7 +378,7 @@ public class DHT implements SocialKademliaDHT
     /**
      * @return A List of all StorageEntries for this node
      */
-    public List<StorageEntryMetadata> getStorageEntries()
+    public List<SocialKademliaStorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
     }
@@ -384,7 +386,7 @@ public class DHT implements SocialKademliaDHT
     /**
      * @return A List of all StorageEntries of cached content for this node
      */
-    public List<StorageEntryMetadata> getCachedStorageEntries()
+    public List<SocialKademliaStorageEntryMetadata> getCachedStorageEntries()
     {
         return contentManager.getAllCachedEntries();
     }
@@ -395,9 +397,9 @@ public class DHT implements SocialKademliaDHT
      *
      * @param ientries The entries to add
      */
-    public void putStorageEntries(List<StorageEntryMetadata> ientries)
+    public void putStorageEntries(List<SocialKademliaStorageEntryMetadata> ientries)
     {
-        for (StorageEntryMetadata e : ientries)
+        for (SocialKademliaStorageEntryMetadata e : ientries)
         {
             try
             {

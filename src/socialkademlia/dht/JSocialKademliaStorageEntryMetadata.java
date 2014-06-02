@@ -12,7 +12,7 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @since 20140226
  */
-public class StorageEntryMetadata
+public class JSocialKademliaStorageEntryMetadata implements SocialKademliaStorageEntryMetadata
 {
 
     private final KademliaId key;
@@ -30,7 +30,7 @@ public class StorageEntryMetadata
     /* This value is the last time this content was last updated from the network */
     private long lastRepublished;
 
-    public StorageEntryMetadata(KadContent content)
+    public JSocialKademliaStorageEntryMetadata(KadContent content)
     {
         this.key = content.getKey();
         this.ownerId = content.getOwnerId();
@@ -41,72 +41,67 @@ public class StorageEntryMetadata
         this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
+    @Override
     public KademliaId getKey()
     {
         return this.key;
     }
 
+    @Override
     public String getOwnerId()
     {
         return this.ownerId;
     }
 
+    @Override
     public String getType()
     {
         return this.type;
     }
 
+    @Override
     public int getContentHash()
     {
         return this.contentHash;
     }
 
+    @Override
     public long getLastUpdatedTimestamp()
     {
         return this.updatedTs;
     }
 
-    /**
-     * Specify that this content should be cached.
-     */
+    @Override
     public void setCached()
     {
         this.isCached = true;
     }
 
-    /**
-     * Specify that this content should be cached.
-     *
-     * @param cached
-     */
+    @Override
     public void setCached(boolean cached)
     {
         this.isCached = cached;
     }
 
+    @Override
     public boolean isCached()
     {
         return this.isCached;
     }
 
-    /**
-     * Specify that this node is one of the k-closest to the content.
-     */
+    @Override
     public void setKNode()
     {
         this.isKNode = true;
     }
 
-    /**
-     * Specify that this content should be cached.
-     *
-     * @param cached
-     */
+    @Override
     public void setKNode(boolean cached)
     {
         this.isKNode = cached;
     }
 
+    @Override
     public boolean isKNode()
     {
         return this.isKNode;
@@ -120,6 +115,7 @@ public class StorageEntryMetadata
      *
      * @return boolean Whether this content satisfies the parameters
      */
+    @Override
     public boolean satisfiesParameters(GetParameter params)
     {
         /* Check that owner id matches */
@@ -143,6 +139,7 @@ public class StorageEntryMetadata
         return true;
     }
 
+    @Override
     public long lastRepublished()
     {
         return this.lastRepublished;
@@ -151,6 +148,7 @@ public class StorageEntryMetadata
     /**
      * Whenever we republish a content or get this content from the network, we update the last republished time
      */
+    @Override
     public void updateLastRepublished()
     {
         this.lastRepublished = System.currentTimeMillis() / 1000L;
@@ -159,7 +157,7 @@ public class StorageEntryMetadata
     @Override
     public boolean equals(Object o)
     {
-        if (o instanceof StorageEntryMetadata)
+        if (o instanceof SocialKademliaStorageEntryMetadata)
         {
             return this.hashCode() == o.hashCode();
         }

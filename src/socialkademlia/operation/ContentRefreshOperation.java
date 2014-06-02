@@ -6,12 +6,13 @@ import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import socialkademlia.dht.DHT;
-import socialkademlia.dht.StorageEntryMetadata;
+import socialkademlia.dht.JSocialKademliaStorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
 import kademlia.operation.Operation;
+import socialkademlia.dht.SocialKademliaStorageEntryMetadata;
 
 /**
  * Refresh/Restore the data on this node by sending the data to the K-Closest nodes to the data
@@ -47,13 +48,13 @@ public class ContentRefreshOperation implements Operation
     public void execute() throws IOException
     {
         /* Get a list of all storage entries for content */
-        List<StorageEntryMetadata> entries = this.dht.getStorageEntries();
+        List<SocialKademliaStorageEntryMetadata> entries = this.dht.getStorageEntries();
 
         /* If a content was last republished before this time, then we need to republish it */
         final long minRepublishTime = (System.currentTimeMillis() / 1000L) - this.config.restoreInterval();
 
         /* For each storage entry, distribute it */
-        for (StorageEntryMetadata e : entries)
+        for (SocialKademliaStorageEntryMetadata e : entries)
         {
             /* Check last update time of this entry and only distribute it if it has been last updated > 1 hour ago */
             if (e.lastRepublished() > minRepublishTime)

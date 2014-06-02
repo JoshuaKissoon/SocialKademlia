@@ -8,11 +8,11 @@ import kademlia.dht.KadContent;
  * @author Joshua Kissoon
  * @since 20140402
  */
-public class StorageEntry
+public class StorageEntry implements SocialKademliaStorageEntry
 {
 
     private String content;
-    private final StorageEntryMetadata metadata;
+    private final SocialKademliaStorageEntryMetadata metadata;
     private boolean isCompressed;       // Is this entry in compressed form
 
     
@@ -22,15 +22,16 @@ public class StorageEntry
 
     public StorageEntry(final KadContent content)
     {
-        this(content, new StorageEntryMetadata(content));
+        this(content, new JSocialKademliaStorageEntryMetadata(content));
     }
 
-    public StorageEntry(final KadContent content, final StorageEntryMetadata metadata)
+    public StorageEntry(final KadContent content, final SocialKademliaStorageEntryMetadata metadata)
     {
         this.setContent(content.toSerializedForm());
         this.metadata = metadata;
     }
 
+    @Override
     public final void setContent(final byte[] data)
     {
         this.content = new String(data);
@@ -41,6 +42,7 @@ public class StorageEntry
         this.content = data;
     }
 
+    @Override
     public final byte[] getContent()
     {
         return this.content.getBytes();
@@ -51,7 +53,7 @@ public class StorageEntry
         return this.content;
     }
 
-    public final StorageEntryMetadata getContentMetadata()
+    public final SocialKademliaStorageEntryMetadata getContentMetadata()
     {
         return this.metadata;
     }

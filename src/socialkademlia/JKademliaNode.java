@@ -19,7 +19,6 @@ import kademlia.KademliaNode;
 import socialkademlia.dht.DHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
-import kademlia.dht.KademliaDHT;
 import socialkademlia.dht.StorageEntry;
 import socialkademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
@@ -37,7 +36,6 @@ import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
-import kademlia.util.serializer.JsonDHTSerializer;
 import kademlia.util.serializer.JsonSerializer;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
@@ -283,6 +281,7 @@ public class JKademliaNode implements KademliaNode
      * @throws IOException           If a network error occurred
      * @throws IllegalStateException If this object is closed
      * */
+    @Override
     public synchronized final void bootstrap(Node n) throws IOException, RoutingException
     {
         long startTime = System.nanoTime();
@@ -303,6 +302,7 @@ public class JKademliaNode implements KademliaNode
      * @throws java.io.IOException
      *
      */
+    @Override
     public int put(KadContent content) throws IOException
     {
         return this.put(new StorageEntry(content));
@@ -352,6 +352,7 @@ public class JKademliaNode implements KademliaNode
      *
      * @throws java.io.IOException
      */
+    @Override
     public void putLocally(KadContent content) throws IOException
     {
         this.dht.store(this.compressStorageEntry(new StorageEntry(content)));
@@ -432,7 +433,7 @@ public class JKademliaNode implements KademliaNode
      * @return StorageEntry with the updated content
      *
      * @throws java.io.IOException
-     * @throws kademlia.exceptions.UpToDateContentException
+     * @throws socialkademlia.exceptions.UpToDateContentException
      */
     public StorageEntry updateContentLocally(GetParameterFUC param) throws IOException, UpToDateContentException, NoSuchElementException
     {
@@ -456,6 +457,7 @@ public class JKademliaNode implements KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.ContentNotFoundException
      */
+    @Override
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
@@ -533,7 +535,7 @@ public class JKademliaNode implements KademliaNode
      * @return StorageEntry The content
      *
      * @throws java.io.IOException
-     * @throws kademlia.exceptions.UpToDateContentException
+     * @throws socialkademlia.exceptions.UpToDateContentException
      */
     public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
@@ -569,6 +571,7 @@ public class JKademliaNode implements KademliaNode
      *
      * @throws java.io.IOException
      */
+    @Override
     public void refresh() throws IOException
     {
         new KadRefreshOperation(this.server, this, this.dht, this.config).execute();
@@ -577,6 +580,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return String The ID of the owner of this local network
      */
+    @Override
     public String getOwnerId()
     {
         return this.ownerId;
@@ -585,6 +589,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * @return Integer The port on which this kad instance is running
      */
+    @Override
     public int getPort()
     {
         return this.udpPort;
@@ -597,6 +602,7 @@ public class JKademliaNode implements KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
+    @Override
     public void shutdown(final boolean saveState) throws IOException
     {
         /* Shut down the server */
@@ -617,7 +623,8 @@ public class JKademliaNode implements KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
-    private void saveKadState() throws IOException
+    @Override
+    public void saveKadState() throws IOException
     {
         DataOutputStream dout;
 
@@ -645,7 +652,7 @@ public class JKademliaNode implements KademliaNode
          * @section Save the DHT
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId, this.config) + File.separator + "dht.kns"));
-        new JsonDHTSerializer().write(this.dht, dout);
+        new JsonSocialKademliaDHTSerializer().write(this.dht, dout);
 
     }
 
@@ -708,23 +715,5 @@ public class JKademliaNode implements KademliaNode
         sb.append("\n\n\n");
 
         return sb.toString();
-    }
-
-    @Override
-    public kademlia.dht.DHT getDHT()
-    {
-
-    }
-
-    @Override
-    public int put(kademlia.dht.StorageEntry entry) throws IOException
-    {
-
-    }
-
-    @Override
-    public kademlia.dht.StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
-    {
-
     }
 }

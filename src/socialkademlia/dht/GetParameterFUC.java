@@ -64,7 +64,7 @@ public class GetParameterFUC extends GetParameter
      *
      * @param md
      */
-    public GetParameterFUC(StorageEntryMetadata md)
+    public GetParameterFUC(SocialKademliaStorageEntryMetadata md)
     {
         super(md);
         this.lastUpdatedTS = md.getLastUpdatedTimestamp();
