@@ -9,7 +9,7 @@ import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeLookupReceiver;
 import kademlia.message.Receiver;
-import socialkademlia.dht.DHT;
+import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
@@ -24,10 +24,10 @@ public class ContentLookupReceiverFUC implements Receiver
     
     private final KadServer server;
     private final JKademliaNode localNode;
-    private final DHT dht;
+    private final SocialKademliaDHT dht;
     private final KadConfiguration config;
     
-    public ContentLookupReceiverFUC(KadServer server, JKademliaNode localNode, DHT dht, KadConfiguration config)
+    public ContentLookupReceiverFUC(KadServer server, JKademliaNode localNode, SocialKademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

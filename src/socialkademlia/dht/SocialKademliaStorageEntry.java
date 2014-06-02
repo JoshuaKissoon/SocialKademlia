@@ -37,4 +37,7 @@ public interface SocialKademliaStorageEntry extends KademliaStorageEntry
      * @return The content in string format
      */
     public String getContentString();
+
+    @Override
+    public SocialKademliaStorageEntryMetadata getContentMetadata();
 }

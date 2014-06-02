@@ -6,6 +6,7 @@ import kademlia.dht.GetParameter;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 import kademlia.simulations.DHTContentImpl;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Test the performance of the GetUpdatedContent RPC in comparison to the getContentRPC
@@ -71,7 +72,7 @@ public class GetContentPerformance
         {
             try
             {
-                JSocialKademliaStorageEntry cc = kads[1].get(gp);
+                SocialKademliaStorageEntry cc = kads[1].get(gp);
             }
             catch (ContentNotFoundException | IOException ex)
             {
