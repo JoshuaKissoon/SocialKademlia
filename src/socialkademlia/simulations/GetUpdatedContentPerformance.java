@@ -1,13 +1,12 @@
 package socialkademlia.simulations;
 
-import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import socialkademlia.JKademliaNode;
 import socialkademlia.dht.GetParameterFUC;
-import socialkademlia.dht.StorageEntry;
 import socialkademlia.exceptions.UpToDateContentException;
 import kademlia.node.KademliaId;
 import kademlia.simulations.DHTContentImpl;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Test the performance of the GetUpdatedContent RPC in comparison to the getContentRPC
@@ -72,7 +71,7 @@ public class GetUpdatedContentPerformance
         {
             try
             {
-                StorageEntry cc = kads[1].getUpdated(gp);
+                SocialKademliaStorageEntry cc = kads[1].getUpdated(gp);
             }
             catch (UpToDateContentException ex)
             {

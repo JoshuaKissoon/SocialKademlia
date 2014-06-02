@@ -14,7 +14,6 @@ import socialkademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import socialkademlia.dht.GetParameterFUC;
-import socialkademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
 import socialkademlia.exceptions.UpToDateContentException;
@@ -27,6 +26,7 @@ import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 import kademlia.operation.Operation;
 import kademlia.util.RouteLengthChecker;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Looks up a specified identifier and returns the value associated with it
@@ -45,7 +45,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
 
     private final KadServer server;
     private final JKademliaNode localNode;
-    private StorageEntry contentFound = null;
+    private SocialKademliaStorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final Message lookupMessage;
@@ -274,7 +274,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
-            StorageEntry content = msg.getContent();
+            SocialKademliaStorageEntry content = msg.getContent();
             this.contentFound = content;
             this.isContentFound = true;
             this.newerContentExist = true;
@@ -356,7 +356,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
      *
      * @throws kademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry getContentFound() throws UpToDateContentException
+    public SocialKademliaStorageEntry getContentFound() throws UpToDateContentException
     {
         /* Check if we have newer content */
         if (this.newerContentExist)

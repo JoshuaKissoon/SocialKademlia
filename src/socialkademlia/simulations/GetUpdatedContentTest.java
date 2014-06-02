@@ -1,13 +1,12 @@
 package socialkademlia.simulations;
 
-import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import socialkademlia.JKademliaNode;
 import socialkademlia.dht.GetParameterFUC;
-import socialkademlia.dht.StorageEntry;
 import socialkademlia.exceptions.UpToDateContentException;
 import kademlia.node.KademliaId;
 import kademlia.simulations.DHTContentImpl;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * We put the content on the network, and then check for an up to date version.
@@ -54,7 +53,7 @@ public class GetUpdatedContentTest
                 /* Lets see if there is an updated version of the content */
                 System.out.println("\n\nRetrieving Content C1");
                 GetParameterFUC gp = new GetParameterFUC(c1.getKey(), DHTContentImpl.TYPE, c1.getOwnerId(), c1.getLastUpdatedTimestamp());
-                StorageEntry conte = kad2.getUpdated(gp);
+                SocialKademliaStorageEntry conte = kad2.getUpdated(gp);
                 System.out.println("Updated Content Found: " + new DHTContentImpl().fromSerializedForm(conte.getContent()));
                 System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
             }
@@ -71,7 +70,7 @@ public class GetUpdatedContentTest
 
                 /* We use c2 old TS, since that's the TS of the version kad2 has */
                 GetParameterFUC gp = new GetParameterFUC(c2.getKey(), DHTContentImpl.TYPE, c2.getOwnerId(), c2OldTs);
-                StorageEntry conte = kad2.getUpdated(gp);
+                SocialKademliaStorageEntry conte = kad2.getUpdated(gp);
                 System.out.println("Updated Content Found: " + new DHTContentImpl().fromSerializedForm(conte.getContent()));
                 System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
 

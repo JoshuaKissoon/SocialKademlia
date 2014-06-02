@@ -3,12 +3,12 @@ package socialkademlia.dht;
 import kademlia.dht.KadContent;
 
 /**
- * A StorageEntry class that is used to store a content on the DHT
+ * A JSocialKademliaStorageEntry class that is used to store a content on the DHT
  *
  * @author Joshua Kissoon
  * @since 20140402
  */
-public class StorageEntry implements SocialKademliaStorageEntry
+public class JSocialKademliaStorageEntry implements SocialKademliaStorageEntry
 {
 
     private String content;
@@ -20,12 +20,12 @@ public class StorageEntry implements SocialKademliaStorageEntry
         this.isCompressed = false;
     }
 
-    public StorageEntry(final KadContent content)
+    public JSocialKademliaStorageEntry(final KadContent content)
     {
         this(content, new JSocialKademliaStorageEntryMetadata(content));
     }
 
-    public StorageEntry(final KadContent content, final SocialKademliaStorageEntryMetadata metadata)
+    public JSocialKademliaStorageEntry(final KadContent content, final SocialKademliaStorageEntryMetadata metadata)
     {
         this.setContent(content.toSerializedForm());
         this.metadata = metadata;

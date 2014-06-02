@@ -19,7 +19,7 @@ import kademlia.KademliaNode;
 import socialkademlia.dht.DHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
-import socialkademlia.dht.StorageEntry;
+import socialkademlia.dht.JSocialKademliaStorageEntry;
 import socialkademlia.dht.util.StorageEntryCompressor;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
@@ -38,6 +38,7 @@ import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
 import kademlia.util.serializer.JsonSerializer;
 import socialkademlia.dht.SocialKademliaDHT;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 import socialkademlia.util.serializer.JsonSocialKadRoutingTableSerializer;
 import socialkademlia.util.serializer.JsonSocialKademliaDHTSerializer;
 
@@ -305,21 +306,21 @@ public class JKademliaNode implements KademliaNode
     @Override
     public int put(KadContent content) throws IOException
     {
-        return this.put(new StorageEntry(content));
+        return this.put(new JSocialKademliaStorageEntry(content));
     }
 
     /**
      * Stores the specified value under the given key
      * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
      *
-     * @param entry The StorageEntry with the content to put onto the DHT
+     * @param entry The JSocialKademliaStorageEntry with the content to put onto the DHT
      *
      * @return Integer How many nodes the content was stored on
      *
      * @throws java.io.IOException
      *
      */
-    private int put(StorageEntry entry) throws IOException
+    private int put(SocialKademliaStorageEntry entry) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, this.compressStorageEntry(entry), this.dht, this.config);
         sop.execute();
@@ -339,7 +340,7 @@ public class JKademliaNode implements KademliaNode
      */
     public int putAndCache(KadContent content) throws IOException
     {
-        StorageEntry entry = new StorageEntry(content);
+        SocialKademliaStorageEntry entry = new JSocialKademliaStorageEntry(content);
 
         this.cache(entry);
         return this.put(entry);
@@ -355,7 +356,7 @@ public class JKademliaNode implements KademliaNode
     @Override
     public void putLocally(KadContent content) throws IOException
     {
-        this.dht.store(this.compressStorageEntry(new StorageEntry(content)));
+        this.dht.store(this.compressStorageEntry(new JSocialKademliaStorageEntry(content)));
     }
 
     /**
@@ -369,10 +370,10 @@ public class JKademliaNode implements KademliaNode
      */
     public void cache(KadContent content) throws IOException
     {
-        this.cache(new StorageEntry(content));
+        this.cache(new JSocialKademliaStorageEntry(content));
     }
 
-    private void cache(StorageEntry entry) throws IOException
+    private void cache(SocialKademliaStorageEntry entry) throws IOException
     {
         this.dht.cache(this.compressStorageEntry(entry));
     }
@@ -380,7 +381,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * Compress the storage entry
      */
-    private StorageEntry compressStorageEntry(final StorageEntry entry)
+    private SocialKademliaStorageEntry compressStorageEntry(final SocialKademliaStorageEntry entry)
     {
         try
         {
@@ -397,7 +398,7 @@ public class JKademliaNode implements KademliaNode
     /**
      * Decompress a given storage entry
      */
-    private StorageEntry decompressStorageEntry(final StorageEntry entry)
+    private SocialKademliaStorageEntry decompressStorageEntry(final SocialKademliaStorageEntry entry)
     {
         try
         {
@@ -420,7 +421,7 @@ public class JKademliaNode implements KademliaNode
      *
      * @throws java.io.IOException
      */
-    public StorageEntry getCachedContent(GetParameter param) throws NoSuchElementException, IOException
+    public SocialKademliaStorageEntry getCachedContent(GetParameter param) throws NoSuchElementException, IOException
     {
         return this.decompressStorageEntry(this.dht.get(param));
     }
@@ -430,12 +431,12 @@ public class JKademliaNode implements KademliaNode
      *
      * @param param The parameters of the content to update
      *
-     * @return StorageEntry with the updated content
+     * @return JSocialKademliaStorageEntry with the updated content
      *
      * @throws java.io.IOException
      * @throws socialkademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry updateContentLocally(GetParameterFUC param) throws IOException, UpToDateContentException, NoSuchElementException
+    public SocialKademliaStorageEntry updateContentLocally(GetParameterFUC param) throws IOException, UpToDateContentException, NoSuchElementException
     {
         if (this.dht.contains(param))
         {
@@ -458,12 +459,12 @@ public class JKademliaNode implements KademliaNode
      * @throws kademlia.exceptions.ContentNotFoundException
      */
     @Override
-    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    public SocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
         {
             /* The content is on our DHT */
-            StorageEntry e = this.dht.get(param);
+            SocialKademliaStorageEntry e = this.dht.get(param);
             if (e.getContentMetadata().isKNode())
             {
                 /* We're one of the k-nodes, lets just return the content */
@@ -509,14 +510,14 @@ public class JKademliaNode implements KademliaNode
      *
      * @param gp
      *
-     * @return The StorageEntry with the content
+     * @return The JSocialKademliaStorageEntry with the content
      *
      * @throws java.io.IOException
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public StorageEntry getAndCache(final GetParameter gp) throws IOException, ContentNotFoundException
+    public SocialKademliaStorageEntry getAndCache(final GetParameter gp) throws IOException, ContentNotFoundException
     {
-        StorageEntry e = this.get(gp);
+        SocialKademliaStorageEntry e = this.get(gp);
         this.cache(e);
 
         /**
@@ -532,12 +533,12 @@ public class JKademliaNode implements KademliaNode
      *
      * @param param The parameters used to search for the content
      *
-     * @return StorageEntry The content
+     * @return JSocialKademliaStorageEntry The content
      *
      * @throws java.io.IOException
      * @throws socialkademlia.exceptions.UpToDateContentException
      */
-    public StorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
+    public SocialKademliaStorageEntry getUpdated(GetParameterFUC param) throws IOException, UpToDateContentException
     {
         /* We assume the owner always have the latest content, so no need to contact any other node for updated content */
         if (param.getOwnerId().equals(this.getOwnerId()))
@@ -551,7 +552,7 @@ public class JKademliaNode implements KademliaNode
         long endTime = System.nanoTime();
         this.statistician.addContentLookupFUC(endTime - startTime, clo.routeLength(), clo.newerContentExist(), clo.isContentFound());
 
-        StorageEntry latest = clo.getContentFound();
+        SocialKademliaStorageEntry latest = clo.getContentFound();
 
         /* If we have this content locally, lets update it too */
         try

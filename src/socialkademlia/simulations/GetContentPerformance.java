@@ -1,10 +1,8 @@
 package socialkademlia.simulations;
 
-import kademlia.simulations.DHTContentImpl;
 import java.io.IOException;
 import socialkademlia.JKademliaNode;
 import kademlia.dht.GetParameter;
-import socialkademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 import kademlia.simulations.DHTContentImpl;
@@ -73,7 +71,7 @@ public class GetContentPerformance
         {
             try
             {
-                StorageEntry cc = kads[1].get(gp);
+                JSocialKademliaStorageEntry cc = kads[1].get(gp);
             }
             catch (ContentNotFoundException | IOException ex)
             {

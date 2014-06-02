@@ -1,7 +1,7 @@
 package socialkademlia.dht.util;
 
 import java.io.IOException;
-import socialkademlia.dht.StorageEntry;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 import socialkademlia.util.StringCompressor;
 
 /**
@@ -27,7 +27,7 @@ public class StorageEntryCompressor
      *
      * @throws java.io.IOException
      */
-    public static StorageEntry compress(final StorageEntry entry) throws IOException
+    public static SocialKademliaStorageEntry compress(final SocialKademliaStorageEntry entry) throws IOException
     {
         if (entry.isCompressed())
         {
@@ -60,7 +60,7 @@ public class StorageEntryCompressor
      *
      * @throws java.io.IOException
      */
-    public static StorageEntry decompress(final StorageEntry entry) throws IOException
+    public static SocialKademliaStorageEntry decompress(final SocialKademliaStorageEntry entry) throws IOException
     {
         if (!entry.isCompressed())
         {

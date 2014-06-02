@@ -14,7 +14,6 @@ import socialkademlia.JKademliaNode;
 import kademlia.dht.GetParameter;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import socialkademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
@@ -26,6 +25,7 @@ import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 import kademlia.operation.Operation;
 import kademlia.util.RouteLengthChecker;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Looks up a specified identifier and returns the value associated with it
@@ -44,7 +44,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final KadServer server;
     private final JKademliaNode localNode;
-    private StorageEntry contentFound = null;
+    private SocialKademliaStorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
@@ -267,7 +267,7 @@ public class ContentLookupOperation implements Operation, Receiver
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
-            StorageEntry content = msg.getContent();
+            SocialKademliaStorageEntry content = msg.getContent();
             this.contentFound = content;
             this.isContentFound = true;
         }
@@ -334,7 +334,7 @@ public class ContentLookupOperation implements Operation, Receiver
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public StorageEntry getContentFound() throws ContentNotFoundException
+    public SocialKademliaStorageEntry getContentFound() throws ContentNotFoundException
     {
         if (this.isContentFound)
         {

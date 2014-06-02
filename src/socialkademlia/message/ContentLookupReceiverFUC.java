@@ -10,7 +10,7 @@ import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeLookupReceiver;
 import kademlia.message.Receiver;
 import socialkademlia.dht.DHT;
-import socialkademlia.dht.StorageEntry;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Responds to a ContentLookupMessage for updated content by sending a ContentLookupMessageFUC containing the requested content information;
@@ -45,7 +45,7 @@ public class ContentLookupReceiverFUC implements Receiver
         if (this.dht.contains(msg.getParameters()))
         {
             /* Return a ContentMessage with the required data if it's a newer version */
-            StorageEntry se = this.dht.get(msg.getParameters());
+            SocialKademliaStorageEntry se = this.dht.get(msg.getParameters());
 
             /* Only if this node is one of the K-Closest or the owner, we return the content */
             if (se.getContentMetadata().isKNode() || se.getContentMetadata().getOwnerId().equals(localNode.getOwnerId()))

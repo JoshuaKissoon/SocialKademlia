@@ -7,7 +7,7 @@ import kademlia.message.Message;
 import kademlia.message.Receiver;
 import kademlia.message.StoreContentMessage;
 import socialkademlia.dht.DHT;
-import socialkademlia.dht.StorageEntry;
+import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
  * Receiver for incoming StoreContentMessage
@@ -47,7 +47,7 @@ public class StoreContentReceiver implements Receiver
              *
              * Specify that this node is one of the k-closest to the content
              */
-            StorageEntry entry = msg.getContent();
+            SocialKademliaStorageEntry entry = msg.getContent();
             entry.getContentMetadata().setCached(false);
             entry.getContentMetadata().setKNode();
             this.dht.store(entry);
