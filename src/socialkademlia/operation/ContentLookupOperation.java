@@ -25,7 +25,7 @@ import kademlia.node.Node;
 import kademlia.operation.Operation;
 import kademlia.util.RouteLengthChecker;
 import socialkademlia.dht.SocialKademliaStorageEntry;
-import socialkademlia.message.SocialKademliaContentMessage;
+import socialkademlia.message.ContentMessage;
 
 /**
  * Looks up a specified identifier and returns the value associated with it
@@ -258,10 +258,10 @@ public class ContentLookupOperation implements Operation, Receiver
             return;
         }
 
-        if (incoming instanceof SocialKademliaContentMessage)
+        if (incoming instanceof ContentMessage)
         {
             /* The reply received is a content message with the required content, take it in */
-            SocialKademliaContentMessage msg = (SocialKademliaContentMessage) incoming;
+            ContentMessage msg = (ContentMessage) incoming;
 
             /* Add the origin node to our routing table */
             this.localNode.getRoutingTable().insert(msg.getOrigin());

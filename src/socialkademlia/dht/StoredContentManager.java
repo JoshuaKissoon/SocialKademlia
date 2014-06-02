@@ -137,7 +137,7 @@ class StoredContentManager
         }
     }
 
-    public SocialKademliaStorageEntryMetadata get(JSocialKademliaStorageEntryMetadata md)
+    public SocialKademliaStorageEntryMetadata get(SocialKademliaStorageEntryMetadata md)
     {
         return this.get(new GetParameter(md));
     }

@@ -16,7 +16,7 @@ import kademlia.dht.GetParameter;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.KademliaNode;
-import socialkademlia.dht.DHT;
+import socialkademlia.dht.JSocialKademliaDHT;
 import socialkademlia.dht.GetParameterFUC;
 import kademlia.dht.KadContent;
 import kademlia.dht.KademliaStorageEntry;
@@ -91,7 +91,7 @@ public class JKademliaNode implements KademliaNode
      * @param ownerId      The Name of this node used for storage
      * @param localNode    The Local Node for this Kad instance
      * @param udpPort      The UDP port to use for routing messages
-     * @param dht          The DHT for this instance
+     * @param dht          The JSocialKademliaDHT for this instance
      * @param config
      * @param routingTable
      *
@@ -126,7 +126,7 @@ public class JKademliaNode implements KademliaNode
             {
                 try
                 {
-                    /* Runs a DHT RefreshOperation  */
+                    /* Runs a JSocialKademliaDHT RefreshOperation  */
                     JKademliaNode.this.refresh();
                 }
                 catch (IOException e)
@@ -153,7 +153,7 @@ public class JKademliaNode implements KademliaNode
                 ownerId,
                 node,
                 udpPort,
-                new DHT(ownerId, config),
+                new JSocialKademliaDHT(ownerId, config),
                 routingTable,
                 config
         );
@@ -257,7 +257,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     /**
-     * @return The DHT for this kad instance
+     * @return The JSocialKademliaDHT for this kad instance
      */
     @Override
     public SocialKademliaDHT getDHT()
@@ -297,7 +297,7 @@ public class JKademliaNode implements KademliaNode
      * Stores the specified value under the given key
      * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
      *
-     * @param content The content to put onto the DHT
+     * @param content The content to put onto the JSocialKademliaDHT
      *
      * @return Integer How many nodes the content was stored on
      *
@@ -314,7 +314,7 @@ public class JKademliaNode implements KademliaNode
      * Stores the specified value under the given key
      * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
      *
-     * @param entry The JSocialKademliaStorageEntry with the content to put onto the DHT
+     * @param entry The JSocialKademliaStorageEntry with the content to put onto the JSocialKademliaDHT
      *
      * @return Integer How many nodes the content was stored on
      *
@@ -348,9 +348,9 @@ public class JKademliaNode implements KademliaNode
     }
 
     /**
-     * Store a content on the local node's DHT
+     * Store a content on the local node's JSocialKademliaDHT
      *
-     * @param content The content to put on the DHT
+     * @param content The content to put on the JSocialKademliaDHT
      *
      * @throws java.io.IOException
      */
@@ -364,7 +364,7 @@ public class JKademliaNode implements KademliaNode
      * Stores the specified value under the given key locally;
      * This content is permanently stored locally and will not be deleted unless the cache is cleared.
      *
-     * @param content The content to put onto the local DHT
+     * @param content The content to put onto the local JSocialKademliaDHT
      *
      * @throws java.io.IOException
      *
@@ -414,7 +414,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     /**
-     * Get some content cached locally on the DHT.
+     * Get some content cached locally on the JSocialKademliaDHT.
      *
      * @param param The parameters used to search for the content
      *
@@ -450,7 +450,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     /**
-     * Get some content stored on the DHT
+     * Get some content stored on the JSocialKademliaDHT
      *
      * @param param The parameters used to search for the content
      *
@@ -464,7 +464,7 @@ public class JKademliaNode implements KademliaNode
     {
         if (this.dht.contains(param))
         {
-            /* The content is on our DHT */
+            /* The content is on our JSocialKademliaDHT */
             SocialKademliaStorageEntry e = this.dht.get(param);
             if (e.getContentMetadata().isKNode())
             {
@@ -497,7 +497,7 @@ public class JKademliaNode implements KademliaNode
             }
         }
 
-        /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        /* Seems like it doesn't exist in our JSocialKademliaDHT, get it from other Nodes */
         long startTime = System.nanoTime();
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
@@ -530,7 +530,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     /**
-     * Get some content stored on the DHT if there is a newer version than our current version.
+     * Get some content stored on the JSocialKademliaDHT if there is a newer version than our current version.
      *
      * @param param The parameters used to search for the content
      *
@@ -546,7 +546,7 @@ public class JKademliaNode implements KademliaNode
         {
             throw new UpToDateContentException("You are the owner of this content, no need to check other nodes!!!");
         }
-        /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        /* Seems like it doesn't exist in our JSocialKademliaDHT, get it from other Nodes */
         long startTime = System.nanoTime();
         ContentLookupOperationFUC clo = new ContentLookupOperationFUC(server, this, param, this.config);
         clo.execute();

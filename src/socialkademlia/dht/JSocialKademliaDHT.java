@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import kademlia.KadConfiguration;
 import kademlia.dht.GetParameter;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaStorageEntryMetadata;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
@@ -19,14 +20,14 @@ import kademlia.util.serializer.JsonSerializer;
 import kademlia.util.serializer.KadSerializer;
 
 /**
- * The main Distributed Hash Table class that manages the entire DHT
+ * The main Distributed Hash Table class that manages the entire JSocialKademliaDHT
  *
  * @author Joshua Kissoon
  * @since 20140226
  *
  * @todo Inherit the kademlia.dht.DHT class to remove the excess methods that are replicated
  */
-public class DHT implements SocialKademliaDHT
+public class JSocialKademliaDHT implements SocialKademliaDHT
 {
 
     private transient StoredContentManager contentManager;
@@ -35,7 +36,7 @@ public class DHT implements SocialKademliaDHT
 
     private final String ownerId;
 
-    public DHT(String ownerId, KadConfiguration config)
+    public JSocialKademliaDHT(String ownerId, KadConfiguration config)
     {
         this.ownerId = ownerId;
         this.config = config;
@@ -43,7 +44,7 @@ public class DHT implements SocialKademliaDHT
     }
 
     /**
-     * Initialize this DHT to it's default state
+     * Initialize this JSocialKademliaDHT to it's default state
      */
     @Override
     public final void initialize()
@@ -52,7 +53,7 @@ public class DHT implements SocialKademliaDHT
     }
 
     /**
-     * Set a new configuration. Mainly used when we restore the DHT state from a file
+     * Set a new configuration. Mainly used when we restore the JSocialKademliaDHT state from a file
      *
      * @param con The new configuration file
      */
@@ -67,6 +68,7 @@ public class DHT implements SocialKademliaDHT
      *
      * @return The new ContentSerializer
      */
+    @Override
     public KadSerializer<SocialKademliaStorageEntry> getSerializer()
     {
         if (null == serializer)
@@ -80,12 +82,13 @@ public class DHT implements SocialKademliaDHT
     /**
      * Handle storing content locally
      *
-     * @param content The DHT content to store
+     * @param content The JSocialKademliaDHT content to store
      *
      * @return boolean true if we stored the content, false if the content already exists and is up to date
      *
      * @throws java.io.IOException
      */
+    @Override
     public boolean store(SocialKademliaStorageEntry content) throws IOException
     {
         boolean cached = content.getContentMetadata().isCached();   // Should we cache this content
@@ -175,12 +178,13 @@ public class DHT implements SocialKademliaDHT
      *
      * We set that this content is a cached entry and that this node is not one of the k-nodes.
      *
-     * @param content The DHT content to store
+     * @param content The JSocialKademliaDHT content to store
      *
      * @return boolean true if we stored the content, false if the content already exists and is up to date
      *
      * @throws java.io.IOException
      */
+    @Override
     public boolean cache(SocialKademliaStorageEntry content) throws IOException
     {
         content.getContentMetadata().setCached();
@@ -188,6 +192,7 @@ public class DHT implements SocialKademliaDHT
         return this.store(content);
     }
 
+    @Override
     public boolean cache(KadContent content) throws IOException
     {
         return this.cache(new JSocialKademliaStorageEntry(content));
@@ -214,6 +219,7 @@ public class DHT implements SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
+    @Override
     public void update(SocialKademliaStorageEntry newContent) throws IOException
     {
         if (this.contentManager.contains(newContent.getContentMetadata()))
@@ -245,7 +251,7 @@ public class DHT implements SocialKademliaDHT
     }
 
     /**
-     * Check if any content for the given criteria exists in this DHT
+     * Check if any content for the given criteria exists in this JSocialKademliaDHT
      *
      * @param param The content search criteria
      *
@@ -290,7 +296,7 @@ public class DHT implements SocialKademliaDHT
      *
      * @param param The parameters used to filter the content needed
      *
-     * @return KadContent A KadContent found on the DHT satisfying the given criteria
+     * @return KadContent A KadContent found on the JSocialKademliaDHT satisfying the given criteria
      *
      * @throws java.io.IOException
      */
@@ -324,11 +330,13 @@ public class DHT implements SocialKademliaDHT
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
+    @Override
     public void remove(KadContent content) throws ContentNotFoundException
     {
         this.remove(new JSocialKademliaStorageEntryMetadata(content));
     }
 
+    @Override
     public void remove(SocialKademliaStorageEntryMetadata entry) throws ContentNotFoundException
     {
         /* If it's cached data, we don't remove it, just set that we are no longer one of the k-closest */
@@ -382,6 +390,7 @@ public class DHT implements SocialKademliaDHT
     /**
      * @return A List of all StorageEntries for this node
      */
+    @Override
     public List<SocialKademliaStorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
@@ -396,18 +405,20 @@ public class DHT implements SocialKademliaDHT
     }
 
     /**
-     * Used to add a list of storage entries for existing content to the DHT.
+     * Used to add a list of storage entries for existing content to the JSocialKademliaDHT.
      * Mainly used when retrieving StorageEntries from a saved state file.
      *
      * @param ientries The entries to add
      */
+    @Override
     public void putStorageEntries(List<SocialKademliaStorageEntryMetadata> ientries)
     {
-        for (SocialKademliaStorageEntryMetadata e : ientries)
+        for (KademliaStorageEntryMetadata e : ientries)
         {
+            SocialKademliaStorageEntryMetadata se = (SocialKademliaStorageEntryMetadata) e;
             try
             {
-                this.contentManager.put(e);
+                this.contentManager.put(se);
             }
             catch (ContentExistException ex)
             {

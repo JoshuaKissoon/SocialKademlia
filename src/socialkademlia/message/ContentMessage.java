@@ -14,7 +14,7 @@ import socialkademlia.dht.SocialKademliaStorageEntry;
  * @author Joshua Kissoon
  * @since 20140226
  */
-public class SocialKademliaContentMessage implements Message
+public class ContentMessage implements Message
 {
 
     public static final byte CODE = 0x04;
@@ -27,13 +27,13 @@ public class SocialKademliaContentMessage implements Message
      * @param content The content to be stored
      *
      */
-    public SocialKademliaContentMessage(Node origin, SocialKademliaStorageEntry content)
+    public ContentMessage(Node origin, SocialKademliaStorageEntry content)
     {
         this.content = content;
         this.origin = origin;
     }
 
-    public SocialKademliaContentMessage(DataInputStream in) throws IOException
+    public ContentMessage(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
