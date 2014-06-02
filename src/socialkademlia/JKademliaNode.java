@@ -34,7 +34,7 @@ import socialkademlia.operation.ContentLookupOperation;
 import socialkademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
-import kademlia.operation.StoreOperation;
+import socialkademlia.operation.StoreOperation;
 import socialkademlia.routing.SocialKadRoutingTable;
 import socialkademlia.routing.SocialKadRoutingTableImpl;
 import kademlia.util.serializer.JsonSerializer;

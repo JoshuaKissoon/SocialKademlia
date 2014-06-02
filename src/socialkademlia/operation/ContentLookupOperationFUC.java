@@ -115,7 +115,7 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             if (this.localNode.getRoutingTable().containsConnection(this.params.getOwnerId()))
             {
                 Node connNode = this.localNode.getRoutingTable().getConnectionNode(this.params.getOwnerId());
-                
+
                 /* We only contact the owner of the contact if this is not the owner */
                 if (!connNode.equals(this.localNode.getNode()))
                 {
@@ -265,10 +265,12 @@ public class ContentLookupOperationFUC implements Operation, Receiver
             return;
         }
 
-        if (incoming instanceof SocialKademliaContentMessage          /* The reply received is a content message with the required content, take it in */
-            SocialKademliaContentMessageContentMessagetMessage) incoming;
+        if (incoming instanceof ContentMessage)
+        {
+            /* The reply received is a content message with the required content, take it in */
+            ContentMessage msg = (ContentMessage) incoming;
 
- ContentMessage node to our routing table */
+            /* ContentMessage node to our routing table */
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
