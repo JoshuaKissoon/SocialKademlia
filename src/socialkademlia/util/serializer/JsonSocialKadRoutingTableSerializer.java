@@ -15,7 +15,7 @@ import java.util.List;
 import kademlia.KadConfiguration;
 import kademlia.routing.Contact;
 import kademlia.util.serializer.KadSerializer;
-import socialkademlia.routing.SocialKadRoutingTable;
+import socialkademlia.routing.SocialKademliaRoutingTable;
 
 /**
  * A KadSerializer that serializes routing tables to JSON format
@@ -41,7 +41,7 @@ import socialkademlia.routing.SocialKadRoutingTable;
  *
  * @since 20140310
  */
-public class JsonSocialKadRoutingTableSerializer implements KadSerializer<SocialKadRoutingTable>
+public class JsonSocialKadRoutingTableSerializer implements KadSerializer<SocialKademliaRoutingTable>
 {
 
     private final Gson gson;
@@ -68,7 +68,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
     }
 
     @Override
-    public void write(SocialKadRoutingTable data, DataOutputStream out) throws IOException
+    public void write(SocialKademliaRoutingTable data, DataOutputStream out) throws IOException
     {
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
@@ -85,7 +85,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
     }
 
     @Override
-    public SocialKadRoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
+    public SocialKademliaRoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))
@@ -93,7 +93,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
             reader.beginArray();
 
             /* Read the basic JKademliaRoutingTable */
-            SocialKadRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
+            SocialKademliaRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
             tbl.setConfiguration(config);
 
             /* Now get the Contacts and add them back to the JKademliaRoutingTable */

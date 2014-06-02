@@ -3,7 +3,7 @@ package socialkademlia.simulations;
 import socialkademlia.simulations.RoutingTableSimulation;
 import socialkademlia.JSocialKademliaNode;
 import kademlia.node.KademliaId;
-import socialkademlia.routing.SocialKadRoutingTable;
+import socialkademlia.routing.SocialKademliaRoutingTable;
 
 /**
  * Testing how the routing table works and checking if everything works properly
@@ -25,7 +25,7 @@ public class RoutingTableSimulation
             JSocialKademliaNode kad4 = new JSocialKademliaNode("Lokesh", new KademliaId("ASF45678947584567466"), 8335);
             JSocialKademliaNode kad5 = new JSocialKademliaNode("Chandu", new KademliaId("ASF45678947584567467"), 13345);
 
-            SocialKadRoutingTable rt = kad1.getRoutingTable();
+            SocialKademliaRoutingTable rt = kad1.getRoutingTable();
             
             rt.insert(kad2.getNode());
             rt.insert(kad3.getNode());

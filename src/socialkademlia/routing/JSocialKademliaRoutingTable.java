@@ -9,12 +9,12 @@ import kademlia.node.Node;
 import kademlia.routing.JKademliaRoutingTable;
 
 /**
- * Implementation of SocialKadRoutingTable
+ * Implementation of SocialKademliaRoutingTable
  *
  * @author Joshua Kissoon
  * @since 20140501
  */
-public class SocialKadRoutingTableImpl extends JKademliaRoutingTable implements SocialKadRoutingTable
+public class JSocialKademliaRoutingTable extends JKademliaRoutingTable implements SocialKademliaRoutingTable
 {
 
     /* Connections of the actor of this node in the DOSN */
@@ -25,7 +25,7 @@ public class SocialKadRoutingTableImpl extends JKademliaRoutingTable implements 
         connections = new HashMap<>();
     }
 
-    public SocialKadRoutingTableImpl(Node localNode, KadConfiguration config)
+    public JSocialKademliaRoutingTable(Node localNode, KadConfiguration config)
     {
         super(localNode, config);
     }

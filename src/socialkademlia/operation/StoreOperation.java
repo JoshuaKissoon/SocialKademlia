@@ -7,7 +7,6 @@ import kademlia.KadServer;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
-import kademlia.operation.NodeLookupOperation;
 import kademlia.operation.Operation;
 import socialkademlia.SocialKademliaNode;
 import socialkademlia.dht.SocialKademliaDHT;

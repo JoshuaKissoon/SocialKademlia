@@ -35,8 +35,8 @@ import socialkademlia.operation.ContentLookupOperationFUC;
 import kademlia.operation.Operation;
 import socialkademlia.operation.KadRefreshOperation;
 import socialkademlia.operation.StoreOperation;
-import socialkademlia.routing.SocialKadRoutingTable;
-import socialkademlia.routing.SocialKadRoutingTableImpl;
+import socialkademlia.routing.SocialKademliaRoutingTable;
+import socialkademlia.routing.JSocialKademliaRoutingTable;
 import kademlia.util.serializer.JsonSerializer;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntry;
@@ -63,7 +63,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
     private final transient Node localNode;
     private final transient KadServer server;
     private final transient SocialKademliaDHT dht;
-    private transient SocialKadRoutingTable routingTable;
+    private transient SocialKademliaRoutingTable routingTable;
     private final int udpPort;
     private transient KadConfiguration config;
 
@@ -99,7 +99,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public JSocialKademliaNode(String ownerId, Node localNode, int udpPort, SocialKademliaDHT dht, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JSocialKademliaNode(String ownerId, Node localNode, int udpPort, SocialKademliaDHT dht, SocialKademliaRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -147,7 +147,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
         this.refreshOperationTimer.purge();
     }
 
-    public JSocialKademliaNode(String ownerId, Node node, int udpPort, SocialKadRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JSocialKademliaNode(String ownerId, Node node, int udpPort, SocialKademliaRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -165,7 +165,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
                 ownerId,
                 node,
                 udpPort,
-                new SocialKadRoutingTableImpl(node, config),
+                new JSocialKademliaRoutingTable(node, config),
                 config
         );
     }
@@ -220,7 +220,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
          * @section Read the routing table
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "routingtable.kns"));
-        SocialKadRoutingTable irtbl = new JsonSocialKadRoutingTableSerializer(iconfig).read(din);
+        SocialKademliaRoutingTable irtbl = new JsonSocialKadRoutingTableSerializer(iconfig).read(din);
 
         /**
          * @section Read the node state
@@ -676,7 +676,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
     }
 
     @Override
-    public SocialKadRoutingTable getRoutingTable()
+    public SocialKademliaRoutingTable getRoutingTable()
     {
         return this.routingTable;
     }

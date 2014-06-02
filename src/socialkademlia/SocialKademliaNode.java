@@ -12,6 +12,7 @@ import kademlia.exceptions.RoutingException;
 import kademlia.node.Node;
 import kademlia.routing.KademliaRoutingTable;
 import socialkademlia.dht.SocialKademliaDHT;
+import socialkademlia.routing.SocialKademliaRoutingTable;
 
 /**
  * The main Kademlia Node on the network, this node manages everything for this local system.
@@ -147,7 +148,7 @@ public interface SocialKademliaNode
     /**
      * @return The routing table for this node.
      */
-    public KademliaRoutingTable getRoutingTable();
+    public SocialKademliaRoutingTable getRoutingTable();
 
     /**
      * @return The statistician that manages all statistics

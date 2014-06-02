@@ -3,7 +3,6 @@ package socialkademlia.operation;
 import java.io.IOException;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.operation.BucketRefreshOperation;
 import kademlia.operation.Operation;
 import socialkademlia.SocialKademliaNode;
 import socialkademlia.dht.SocialKademliaDHT;

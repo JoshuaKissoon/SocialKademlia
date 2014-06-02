@@ -13,7 +13,7 @@ import kademlia.routing.KademliaRoutingTable;
  * @author Joshua Kissoon
  * @created 20140501
  */
-public interface SocialKadRoutingTable extends KademliaRoutingTable
+public interface SocialKademliaRoutingTable extends KademliaRoutingTable
 {
 
     /**
