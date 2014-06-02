@@ -7,7 +7,6 @@ import kademlia.KadServer;
 import kademlia.message.ContentMessage;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
-import kademlia.message.NodeLookupReceiver;
 import kademlia.message.Receiver;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntry;

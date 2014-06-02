@@ -7,18 +7,14 @@ import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.message.AcknowledgeMessage;
 import kademlia.message.ConnectMessage;
-import kademlia.message.ConnectReceiver;
 import kademlia.message.ContentLookupMessage;
-import kademlia.message.ContentMessage;
 import kademlia.message.KademliaMessageFactory;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
-import kademlia.message.NodeLookupReceiver;
 import kademlia.message.NodeReplyMessage;
 import kademlia.message.Receiver;
 import kademlia.message.SimpleMessage;
 import kademlia.message.SimpleReceiver;
-import kademlia.message.StoreContentMessage;
 import socialkademlia.dht.SocialKademliaDHT;
 
 /**
