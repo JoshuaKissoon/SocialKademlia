@@ -63,7 +63,7 @@ public class JsonSocialKademliaDHTSerializer implements KadSerializer<SocialKade
             writer.beginArray();
 
             /* Write the basic DHT */
-            gson.toJson(data, DHT.class, writer);
+            gson.toJson(data, SocialKademliaDHT.class, writer);
 
             /* Now Store the Entries  */
             gson.toJson(data.getStorageEntries(), this.storageEntriesCollectionType, writer);
@@ -82,7 +82,7 @@ public class JsonSocialKademliaDHTSerializer implements KadSerializer<SocialKade
             reader.beginArray();
 
             /* Read the basic DHT */
-            SocialKademliaDHT dht = gson.fromJson(reader, DHT.class);
+            SocialKademliaDHT dht = gson.fromJson(reader, SocialKademliaDHT.class);
             dht.initialize();
 
             /* Now get the entries and add them back to the DHT */
