@@ -6,7 +6,7 @@ import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
-import kademlia.message.StoreContentMessage;
+import socialkademlia.message.StoreContentMessage;
 import kademlia.node.Node;
 import kademlia.operation.Operation;
 import socialkademlia.SocialKademliaNode;
