@@ -24,6 +24,7 @@ import kademlia.node.Node;
 import kademlia.operation.Operation;
 import kademlia.util.RouteLengthChecker;
 import socialkademlia.SocialKademliaNode;
+import socialkademlia.dht.JSocialKademliaStorageEntry;
 import socialkademlia.dht.SocialKademliaStorageEntry;
 import socialkademlia.message.ContentMessage;
 
@@ -44,7 +45,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final KadServer server;
     private final SocialKademliaNode localNode;
-    private SocialKademliaStorageEntry contentFound = null;
+    private JSocialKademliaStorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
@@ -267,7 +268,7 @@ public class ContentLookupOperation implements Operation, Receiver
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
-            SocialKademliaStorageEntry content = msg.getContent();
+            JSocialKademliaStorageEntry content = msg.getContent();
             this.contentFound = content;
             this.isContentFound = true;
         }
@@ -334,7 +335,7 @@ public class ContentLookupOperation implements Operation, Receiver
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public SocialKademliaStorageEntry getContentFound() throws ContentNotFoundException
+    public JSocialKademliaStorageEntry getContentFound() throws ContentNotFoundException
     {
         if (this.isContentFound)
         {

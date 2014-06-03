@@ -31,7 +31,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
 {
 
     private transient StoredContentManager contentManager;
-    private transient KadSerializer<SocialKademliaStorageEntry> serializer = null;
+    private transient KadSerializer<JSocialKademliaStorageEntry> serializer = null;
     private transient KadConfiguration config;
 
     private final String ownerId;
@@ -69,7 +69,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @return The new ContentSerializer
      */
     @Override
-    public KadSerializer<SocialKademliaStorageEntry> getSerializer()
+    public KadSerializer<JSocialKademliaStorageEntry> getSerializer()
     {
         if (null == serializer)
         {
@@ -89,7 +89,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @throws java.io.IOException
      */
     @Override
-    public boolean store(SocialKademliaStorageEntry content) throws IOException
+    public boolean store(JSocialKademliaStorageEntry content) throws IOException
     {
         boolean cached = content.getContentMetadata().isCached();   // Should we cache this content
         boolean isKNode = content.getContentMetadata().isKNode();   // Is this node one of the k-node
@@ -185,7 +185,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @throws java.io.IOException
      */
     @Override
-    public boolean cache(SocialKademliaStorageEntry content) throws IOException
+    public boolean cache(JSocialKademliaStorageEntry content) throws IOException
     {
         content.getContentMetadata().setCached();
         content.getContentMetadata().setKNode(false);
@@ -201,7 +201,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
     /**
      * Write the given storage entry to it's file
      */
-    private void putContentToFile(SocialKademliaStorageEntry content, SocialKademliaStorageEntryMetadata entryMD) throws IOException
+    private void putContentToFile(JSocialKademliaStorageEntry content, SocialKademliaStorageEntryMetadata entryMD) throws IOException
     {
         String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
 
@@ -220,7 +220,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @throws java.io.IOException
      */
     @Override
-    public void update(SocialKademliaStorageEntry newContent) throws IOException
+    public void update(JSocialKademliaStorageEntry newContent) throws IOException
     {
         if (this.contentManager.contains(newContent.getContentMetadata()))
         {
@@ -243,7 +243,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @throws java.io.IOException
      */
     @Override
-    public SocialKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    public JSocialKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -257,6 +257,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      *
      * @return boolean Whether any content exist that satisfy the criteria
      */
+    @Override
     public boolean contains(GetParameter param)
     {
         return this.contentManager.contains(param);
@@ -271,7 +272,8 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public SocialKademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
+    @Override
+    public JSocialKademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -301,7 +303,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
      * @throws java.io.IOException
      */
     @Override
-    public SocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException
+    public JSocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try

@@ -6,6 +6,7 @@ import socialkademlia.dht.GetParameterFUC;
 import socialkademlia.exceptions.UpToDateContentException;
 import kademlia.node.KademliaId;
 import kademlia.simulations.DHTContentImpl;
+import socialkademlia.dht.JSocialKademliaStorageEntry;
 import socialkademlia.dht.SocialKademliaStorageEntry;
 
 /**
@@ -53,7 +54,7 @@ public class GetUpdatedContentTest
                 /* Lets see if there is an updated version of the content */
                 System.out.println("\n\nRetrieving Content C1");
                 GetParameterFUC gp = new GetParameterFUC(c1.getKey(), DHTContentImpl.TYPE, c1.getOwnerId(), c1.getLastUpdatedTimestamp());
-                SocialKademliaStorageEntry conte = kad2.getUpdated(gp);
+                JSocialKademliaStorageEntry conte = kad2.getUpdated(gp);
                 System.out.println("Updated Content Found: " + new DHTContentImpl().fromSerializedForm(conte.getContent()));
                 System.out.println("Updated Content Metadata: " + conte.getContentMetadata());
             }

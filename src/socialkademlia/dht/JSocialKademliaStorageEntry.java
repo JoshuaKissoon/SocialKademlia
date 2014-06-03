@@ -12,7 +12,7 @@ public class JSocialKademliaStorageEntry implements SocialKademliaStorageEntry
 {
 
     private String content;
-    private final SocialKademliaStorageEntryMetadata metadata;
+    private final JSocialKademliaStorageEntryMetadata metadata;
     private boolean isCompressed;       // Is this entry in compressed form
 
     
@@ -25,7 +25,7 @@ public class JSocialKademliaStorageEntry implements SocialKademliaStorageEntry
         this(content, new JSocialKademliaStorageEntryMetadata(content));
     }
 
-    public JSocialKademliaStorageEntry(final KadContent content, final SocialKademliaStorageEntryMetadata metadata)
+    public JSocialKademliaStorageEntry(final KadContent content, final JSocialKademliaStorageEntryMetadata metadata)
     {
         this.setContent(content.toSerializedForm());
         this.metadata = metadata;
@@ -37,6 +37,7 @@ public class JSocialKademliaStorageEntry implements SocialKademliaStorageEntry
         this.content = new String(data);
     }
 
+    @Override
     public final void setContent(String data)
     {
         this.content = data;
@@ -48,26 +49,31 @@ public class JSocialKademliaStorageEntry implements SocialKademliaStorageEntry
         return this.content.getBytes();
     }
 
+    @Override
     public final String getContentString()
     {
         return this.content;
     }
 
+    @Override
     public final SocialKademliaStorageEntryMetadata getContentMetadata()
     {
         return this.metadata;
     }
 
+    @Override
     public boolean isCompressed()
     {
         return this.isCompressed;
     }
 
+    @Override
     public void setCompressed()
     {
         this.isCompressed = true;
     }
 
+    @Override
     public void setDecompressed()
     {
         this.isCompressed = false;

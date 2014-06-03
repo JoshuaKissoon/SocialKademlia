@@ -37,7 +37,7 @@ public interface SocialKademliaDHT
      *
      * @return The new ContentSerializer
      */
-    public KadSerializer<SocialKademliaStorageEntry> getSerializer();
+    public KadSerializer<JSocialKademliaStorageEntry> getSerializer();
 
     /**
      * Handle storing content locally
@@ -48,7 +48,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public boolean store(SocialKademliaStorageEntry content) throws IOException;
+    public boolean store(JSocialKademliaStorageEntry content) throws IOException;
 
     public boolean store(KadContent content) throws IOException;
 
@@ -63,7 +63,7 @@ public interface SocialKademliaDHT
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public SocialKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
+    public JSocialKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
 
     /**
      * Check if any content for the given criteria exists in this DHT
@@ -83,7 +83,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public SocialKademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
+    public JSocialKademliaStorageEntry get(SocialKademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
 
     /**
      * Get the StorageEntry for the content if any exist.
@@ -94,7 +94,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public SocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
+    public JSocialKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
 
     /**
      * Delete a content from local storage
@@ -132,7 +132,7 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public boolean cache(SocialKademliaStorageEntry content) throws IOException;
+    public boolean cache(JSocialKademliaStorageEntry content) throws IOException;
 
     public boolean cache(KadContent content) throws IOException;
 
@@ -143,5 +143,5 @@ public interface SocialKademliaDHT
      *
      * @throws java.io.IOException
      */
-    public void update(SocialKademliaStorageEntry newContent) throws IOException;
+    public void update(JSocialKademliaStorageEntry newContent) throws IOException;
 }

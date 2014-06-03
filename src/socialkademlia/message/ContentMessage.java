@@ -6,7 +6,7 @@ import java.io.IOException;
 import kademlia.message.Message;
 import kademlia.node.Node;
 import kademlia.util.serializer.JsonSerializer;
-import socialkademlia.dht.SocialKademliaStorageEntry;
+import socialkademlia.dht.JSocialKademliaStorageEntry;
 
 /**
  * A Message used to send content between nodes
@@ -19,7 +19,7 @@ public class ContentMessage implements Message
 
     public static final byte CODE = 0x04;
 
-    private SocialKademliaStorageEntry content;
+    private JSocialKademliaStorageEntry content;
     private Node origin;
 
     /**
@@ -27,7 +27,7 @@ public class ContentMessage implements Message
      * @param content The content to be stored
      *
      */
-    public ContentMessage(Node origin, SocialKademliaStorageEntry content)
+    public ContentMessage(Node origin, JSocialKademliaStorageEntry content)
     {
         this.content = content;
         this.origin = origin;
@@ -44,7 +44,7 @@ public class ContentMessage implements Message
         this.origin.toStream(out);
 
         /* Serialize the KadContent, then send it to the stream */
-        new JsonSerializer<SocialKademliaStorageEntry>().write(content, out);
+        new JsonSerializer<JSocialKademliaStorageEntry>().write(content, out);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ContentMessage implements Message
 
         try
         {
-            this.content = new JsonSerializer<SocialKademliaStorageEntry>().read(in);
+            this.content = new JsonSerializer<JSocialKademliaStorageEntry>().read(in);
         }
         catch (ClassNotFoundException e)
         {
@@ -67,7 +67,7 @@ public class ContentMessage implements Message
         return this.origin;
     }
 
-    public SocialKademliaStorageEntry getContent()
+    public JSocialKademliaStorageEntry getContent()
     {
         return this.content;
     }
