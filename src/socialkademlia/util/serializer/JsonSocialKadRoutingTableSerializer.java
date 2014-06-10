@@ -15,6 +15,7 @@ import java.util.List;
 import kademlia.KadConfiguration;
 import kademlia.routing.Contact;
 import kademlia.util.serializer.KadSerializer;
+import socialkademlia.routing.JSocialKademliaRoutingTable;
 import socialkademlia.routing.SocialKademliaRoutingTable;
 
 /**
@@ -75,7 +76,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
             writer.beginArray();
 
             /* Write the basic JKademliaRoutingTable */
-            gson.toJson(data, JKademliaRoutingTable.class, writer);
+            gson.toJson(data, JSocialKademliaRoutingTable.class, writer);
 
             /* Now Store the Contacts  */
             gson.toJson(data.getAllContacts(), contactCollectionType, writer);
@@ -93,7 +94,7 @@ public class JsonSocialKadRoutingTableSerializer implements KadSerializer<Social
             reader.beginArray();
 
             /* Read the basic JKademliaRoutingTable */
-            SocialKademliaRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
+            SocialKademliaRoutingTable tbl = gson.fromJson(reader, JSocialKademliaRoutingTable.class);
             tbl.setConfiguration(config);
 
             /* Now get the Contacts and add them back to the JKademliaRoutingTable */

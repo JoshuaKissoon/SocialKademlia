@@ -11,8 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.List;
-import kademlia.dht.DHT;
 import kademlia.util.serializer.KadSerializer;
+import socialkademlia.dht.JSocialKademliaDHT;
+import socialkademlia.dht.JSocialKademliaStorageEntryMetadata;
 import socialkademlia.dht.SocialKademliaDHT;
 import socialkademlia.dht.SocialKademliaStorageEntryMetadata;
 
@@ -50,7 +51,7 @@ public class JsonSocialKademliaDHTSerializer implements KadSerializer<SocialKade
     {
         gson = new Gson();
 
-        storageEntriesCollectionType = new TypeToken<List<SocialKademliaStorageEntryMetadata>>()
+        storageEntriesCollectionType = new TypeToken<List<JSocialKademliaStorageEntryMetadata>>()
         {
         }.getType();
     }
@@ -63,7 +64,7 @@ public class JsonSocialKademliaDHTSerializer implements KadSerializer<SocialKade
             writer.beginArray();
 
             /* Write the basic DHT */
-            gson.toJson(data, SocialKademliaDHT.class, writer);
+            gson.toJson(data, JSocialKademliaDHT.class, writer);
 
             /* Now Store the Entries  */
             gson.toJson(data.getStorageEntries(), this.storageEntriesCollectionType, writer);
@@ -82,7 +83,7 @@ public class JsonSocialKademliaDHTSerializer implements KadSerializer<SocialKade
             reader.beginArray();
 
             /* Read the basic DHT */
-            SocialKademliaDHT dht = gson.fromJson(reader, SocialKademliaDHT.class);
+            SocialKademliaDHT dht = gson.fromJson(reader, JSocialKademliaDHT.class);
             dht.initialize();
 
             /* Now get the entries and add them back to the DHT */
