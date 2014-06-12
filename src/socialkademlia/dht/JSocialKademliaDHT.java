@@ -136,7 +136,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
                 /* Since we don't have the latest version, lets delete it so the new version will be added below */
                 try
                 {
-                    this.remove(content.getContentMetadata());
+                    this.absoluteRemove(current);
                 }
                 catch (ContentNotFoundException ex)
                 {
@@ -338,6 +338,25 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
         this.remove(new JSocialKademliaStorageEntryMetadata(content));
     }
 
+    /**
+     * Similar to the remove method, however, in this case, we remove the content even if it's cached
+     */
+    private void absoluteRemove(SocialKademliaStorageEntryMetadata entry) throws ContentNotFoundException
+    {
+        contentManager.remove(entry);
+
+        String folder = this.getContentStorageFolderName(entry.getKey());
+        File file = new File(folder + File.separator + entry.hashCode() + ".kct");
+        if (file.exists())
+        {
+            file.delete();
+        }
+        else
+        {
+            throw new ContentNotFoundException();
+        }
+    }
+
     @Override
     public void remove(SocialKademliaStorageEntryMetadata entry) throws ContentNotFoundException
     {
@@ -348,19 +367,7 @@ public class JSocialKademliaDHT implements SocialKademliaDHT
             return;
         }
 
-        String folder = this.getContentStorageFolderName(entry.getKey());
-        File file = new File(folder + File.separator + entry.hashCode() + ".kct");
-
-        contentManager.remove(entry);
-
-        if (file.exists())
-        {
-            file.delete();
-        }
-        else
-        {
-            throw new ContentNotFoundException();
-        }
+        this.absoluteRemove(entry);
     }
 
     /**

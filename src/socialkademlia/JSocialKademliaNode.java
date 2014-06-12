@@ -465,12 +465,7 @@ public class JSocialKademliaNode implements SocialKademliaNode
         {
             /* The content is on our JSocialKademliaDHT */
             JSocialKademliaStorageEntry e = this.dht.get(param);
-            if (e.getContentMetadata().isKNode())
-            {
-                /* We're one of the k-nodes, lets just return the content */
-                return this.decompressStorageEntry(e);
-            }
-            else if (e.getContentMetadata().isCached())
+            if (e.getContentMetadata().isCached())
             {
                 /**
                  * If it's cached, we check for an updated version
@@ -488,6 +483,11 @@ public class JSocialKademliaNode implements SocialKademliaNode
                     /* well the version we have is the latest, lets just return that */
                     return this.decompressStorageEntry(e);
                 }
+            }
+            else if (e.getContentMetadata().isKNode())
+            {
+                /* We're one of the k-nodes, lets just return the content */
+                return this.decompressStorageEntry(e);
             }
             else
             {
